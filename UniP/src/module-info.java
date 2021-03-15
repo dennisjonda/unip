@@ -1,3 +1,3 @@
 module unip {
-	exports main;
+	exports unip;
 }
