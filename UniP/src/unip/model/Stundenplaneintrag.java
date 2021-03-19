@@ -1,4 +1,4 @@
-package unip;
+package unip.model;
 
 public class Stundenplaneintrag {
 
@@ -7,23 +7,23 @@ public class Stundenplaneintrag {
 	
 	private Stundenplaneintrag(String bezeichnung, int tag, int block) { 
 		this.bezeichnung = bezeichnung;
-		this.blockID = tag + block;
+		this.blockID = (tag*10) + block;
 	}
 	
 	public int getID() {
-		return this.blockID;
+		return blockID;
 	}
 	
 	public int getBlock() {
-		return (this.blockID / 10) % 10;
+		return blockID % 10;
 	}
 	
 	public int getTag() {
-		return (this.blockID %10);
+		return blockID / 10;
 	}
 	
-	public void setBlock(int tag, int block) { // Wieso keine setTag Methode?
-		
+	public void setBlock(int tag, int block) {
+		blockID = (tag*10) + block;
 	}
 	
 }

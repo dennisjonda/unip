@@ -1,4 +1,4 @@
-package unip;
+package unip.model;
 
 public class Modul {
 
@@ -28,5 +28,9 @@ public class Modul {
 		this.prüfungsform = prüfungsform;
 		this.prüfungsvoraussetzung = prüfungsvoraussetzung;
 		this.crp = crp;
+	}
+	
+	public int getID() {
+		return modulID;
 	}
 }
