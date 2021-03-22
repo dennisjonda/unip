@@ -10,7 +10,7 @@
 
 <HBox alignment="CENTER" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unip.controller.ToDoReiter">
    <children>
-      <ScrollPane fitToWidth="true" vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
+      <ScrollPane fitToWidth="true" HBox.hgrow="ALWAYS">
                <content>
                   <VBox fx:id="vbox" spacing="10.0">
                      <children>
