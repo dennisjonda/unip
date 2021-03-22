@@ -1,10 +1,13 @@
 package unip;
 
+import unip.view.MainController;
+
 public class Main {
+	
+	public static MainController mainController;
 
 	public static void main(String[] args) {
-		System.out.println("Hello World!");
-		System.out.println("Hallo Elena! :)");
+		MainController.run(args);
 	}
 
 }

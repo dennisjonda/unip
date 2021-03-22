@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox alignment="CENTER" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unip.controller.ToDoReiter">
+   <children>
+      <ScrollPane fitToWidth="true" vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
+               <content>
+                  <VBox fx:id="vbox" spacing="10.0">
+                     <children>
+                        <HBox fillHeight="false" VBox.vgrow="NEVER">
+                           <children>
+                              <TextField HBox.hgrow="ALWAYS" />
+                              <CheckBox mnemonicParsing="false" onAction="#checkBoxListener" HBox.hgrow="NEVER">
+                                 <padding>
+                                    <Insets left="2.0" top="2.0" />
+                                 </padding>
+                              </CheckBox>
+                           </children>
+                        </HBox>
+                        <HBox fillHeight="false" VBox.vgrow="NEVER">
+                           <children>
+                              <TextField HBox.hgrow="ALWAYS" />
+                              <CheckBox mnemonicParsing="false" onAction="#checkBoxListener" HBox.hgrow="NEVER">
+                                 <padding>
+                                    <Insets left="2.0" top="2.0" />
+                                 </padding>
+                              </CheckBox>
+                           </children>
+                        </HBox>
+                        <HBox fillHeight="false" VBox.vgrow="NEVER">
+                           <children>
+                              <TextField HBox.hgrow="ALWAYS" />
+                              <CheckBox mnemonicParsing="false" onAction="#checkBoxListener" HBox.hgrow="NEVER">
+                                 <padding>
+                                    <Insets left="2.0" top="2.0" />
+                                 </padding>
+                              </CheckBox>
+                           </children>
+                        </HBox>
+                        <HBox fillHeight="false" VBox.vgrow="NEVER">
+                           <children>
+                              <TextField HBox.hgrow="ALWAYS" />
+                              <CheckBox mnemonicParsing="false" onAction="#checkBoxListener" HBox.hgrow="NEVER">
+                                 <padding>
+                                    <Insets left="2.0" top="2.0" />
+                                 </padding>
+                              </CheckBox>
+                           </children>
+                        </HBox>
+                        <HBox fillHeight="false" VBox.vgrow="NEVER">
+                           <children>
+                              <TextField HBox.hgrow="ALWAYS" />
+                              <CheckBox mnemonicParsing="false" onAction="#checkBoxListener" HBox.hgrow="NEVER">
+                                 <padding>
+                                    <Insets left="2.0" top="2.0" />
+                                 </padding>
+                              </CheckBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </content>
+         <HBox.margin>
+            <Insets right="20.0" />
+         </HBox.margin>
+            </ScrollPane>
+      <Button mnemonicParsing="false" onAction="#loeschenListener" text="Löschen" />
+   </children>
+</HBox>

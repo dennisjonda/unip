@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.geometry.Insets?>
+
+<HBox fx:id="hbox" fillHeight="false" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextField HBox.hgrow="ALWAYS" />
+      <CheckBox mnemonicParsing="false" HBox.hgrow="NEVER">
+         <padding>
+            <Insets left="2.0" top="2.0" />
+         </padding>
+      </CheckBox>
+   </children>
+</HBox>
+
