@@ -56,6 +56,7 @@ public class MainController extends Application {
 			HBox navigation = (HBox)FXMLLoader.load(getClass().getResource("Navigation.fxml"));
 			border.setTop(navigation);
 			Scene scene = new Scene(border,1280,720);
+			primaryStage.setTitle("UniP");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
