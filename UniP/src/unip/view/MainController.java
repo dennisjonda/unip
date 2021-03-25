@@ -24,6 +24,7 @@ public class MainController extends Application {
 			reiter = new Node[5];
 			try {		
 			reiter[2]= (Node) FXMLLoader.load(getClass().getResource("StundenplanGUI.fxml"));
+			reiter[3]= (Node) FXMLLoader.load(getClass().getResource("ModulGUI.fxml"));
 			reiter[4]= (Node) FXMLLoader.load(getClass().getResource("ToDoGUI.fxml"));
 			} catch(Exception e) {
 				e.printStackTrace();
@@ -39,6 +40,9 @@ public class MainController extends Application {
 		switch (button.getId()) {
 		case "stundenplan":
 			aktuellerReiter=2;
+			break;
+		case "module":
+			aktuellerReiter=3;
 			break;
 		case "todo":
 			aktuellerReiter=4;
