@@ -12,8 +12,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TextField;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -27,6 +29,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class ModulReiter extends Reiter {
 
@@ -41,55 +45,155 @@ public class ModulReiter extends Reiter {
 
 	@Override
 	public void initialize() {
-		int anzSem = 5;
+		int anzSem = 1;
 		for(int i=1; i<=anzSem;i++) {
-			
-			Separator separator = new Separator(Orientation.VERTICAL);
-			separator.setPadding(new Insets(0, 3, 0, 0));			
-			semester.getChildren().add(separator);
-
-			BorderPane border = new BorderPane();
-			semester.getChildren().add(border);
-			
-			VBox vbox = new VBox();
-			setDropTarget(vbox);
-			vbox.setPadding(new Insets(30,0,0,0));
-			vbox.setSpacing(5);
-			
-			Text semCap = new Text();
-			semCap.setText(i + ".Semester");
-			BorderPane.setAlignment(semCap, Pos.CENTER);
-			border.setTop(semCap);
-			
-			StackPane modul = new StackPane();
-			try {
-				modul = (StackPane) FXMLLoader.load(new File("src/unip/view/ModulBlock.fxml").toURI().toURL());
-				((Text) modul.getChildren().get(0)).setText("Modul" + i);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}			
-			setDragable(modul);
-			vbox.getChildren().add(modul);
-			
-			BorderPane.setAlignment(vbox, Pos.CENTER);
-			border.setCenter(vbox);
-			
-			Button AddBtn = new Button("Modul\nhinzufügen");
-			AddBtn.setTextAlignment(TextAlignment.CENTER);
-			BorderPane.setAlignment(AddBtn, Pos.CENTER);
-			AddBtn.setOnAction(new EventHandler<ActionEvent>() {
-				
-				@Override
-				public void handle(ActionEvent arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
-			border.setBottom(AddBtn);
-			
-			
+			addSemesterListener(null);			
 		}
 		
+	}
+	
+	public void addSemesterListener(ActionEvent event) {
+		Separator separator = new Separator(Orientation.VERTICAL);
+		separator.setPadding(new Insets(0, 3, 0, 0));			
+		semester.getChildren().add(separator);
+		
+		BorderPane border = new BorderPane();
+		semester.getChildren().add(border);
+		
+		VBox vbox = new VBox();
+		setDropTarget(vbox);
+		vbox.setPadding(new Insets(30,0,0,0));
+		vbox.setSpacing(5);
+		BorderPane.setAlignment(vbox, Pos.CENTER);
+		border.setCenter(vbox);
+		
+		Text semCap = new Text();
+		semCap.setText((semester.getChildrenUnmodifiable().size()/2) + ".Semester");
+		BorderPane.setAlignment(semCap, Pos.CENTER);
+		border.setTop(semCap);
+		
+		Button AddBtn = new Button("Modul\nhinzufügen");
+		AddBtn.setTextAlignment(TextAlignment.CENTER);
+		BorderPane.setAlignment(AddBtn, Pos.CENTER);
+		AddBtn.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {				
+				try {
+					VBox content = (VBox) FXMLLoader.load(new File("src/unip/view/ModulPopUp.fxml").toURI().toURL());
+			        
+			        final Stage dialog = new Stage();
+			        dialog.setTitle("Modul hinzufügen");
+			        dialog.initModality(Modality.APPLICATION_MODAL);
+			        dialog.initOwner(((Node) event.getSource()).getScene().getWindow());
+			        
+			        
+			        
+			        
+			        
+			        Button abbrechenBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(0);
+			        Button speichernBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(1);
+			        
+			        abbrechenBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+						@Override
+						public void handle(ActionEvent event) {
+							dialog.close();							
+						}
+					});
+			        
+			        speichernBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+						@Override
+						public void handle(ActionEvent arg) {
+							String kuerzel = ((TextField) content.getChildren().get(3)).getText();
+							String name = ((TextField) content.getChildren().get(5)).getText();	
+							String prüfungsform = ((TextField) content.getChildren().get(7)).getText();	
+							String prüfungsvoraussetzung = ((TextField) content.getChildren().get(9)).getText();	
+							String cpr = ((TextField) content.getChildren().get(11)).getText();	
+							String note = ((TextField) content.getChildren().get(13)).getText();
+							
+							StackPane modul = new StackPane(); //Eigentliches Modul Anzeigen
+							try {
+								modul = (StackPane) FXMLLoader.load(new File("src/unip/view/ModulBlock.fxml").toURI().toURL());
+								((Text) modul.getChildren().get(0)).setText(kuerzel);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}			
+							setDragable(modul);
+							
+							modul.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+								@Override
+								public void handle(MouseEvent arg0) {
+									try {
+										VBox content = (VBox) FXMLLoader.load(new File("src/unip/view/ModulPopUp.fxml").toURI().toURL());
+								        
+								        final Stage dialog = new Stage();
+								        dialog.setTitle("Modul ändern");
+								        dialog.initModality(Modality.APPLICATION_MODAL);
+								        dialog.initOwner(((Node) event.getSource()).getScene().getWindow());
+								        
+										String kuerzel = ((Text) ((StackPane) arg0.getSource()).getChildren().get(0)).getText();								        
+										((TextField) content.getChildren().get(3)).setText(kuerzel);
+										((Text) content.getChildren().get(0)).setText("Modul ändern");
+										
+								        Button loeschenBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(0);
+								        Button speichernBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(1);
+								        
+								        loeschenBtn.setText("Löschen");
+								        loeschenBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+											@Override
+											public void handle(ActionEvent event) {
+												StackPane source = (StackPane) arg0.getSource();
+												((VBox) source.getParent()).getChildren().remove(source);
+												dialog.close();							
+											}
+										});
+								        
+								        speichernBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+											@Override
+											public void handle(ActionEvent arg) {
+												String kuerzel = ((TextField) content.getChildren().get(3)).getText();
+												String name = ((TextField) content.getChildren().get(5)).getText();	
+												String prüfungsform = ((TextField) content.getChildren().get(7)).getText();	
+												String prüfungsvoraussetzung = ((TextField) content.getChildren().get(9)).getText();	
+												String cpr = ((TextField) content.getChildren().get(11)).getText();	
+												String note = ((TextField) content.getChildren().get(13)).getText();
+												
+												((Text) ((StackPane) arg0.getSource()).getChildren().get(0)).setText(kuerzel);
+												
+												dialog.close();
+											}
+										});
+								        
+								        Scene dialogScene = new Scene(content);
+								        dialog.setScene(dialogScene);
+								        dialog.show();
+									} catch(Exception e) {
+										e.printStackTrace();
+									}
+									
+								}
+							});
+							
+							((VBox) ((BorderPane) ((Button) event.getSource()).getParent()).getCenter()).getChildren().add(modul);	
+							
+							dialog.close();
+						}
+					});
+			        
+			        Scene dialogScene = new Scene(content);
+			        dialog.setScene(dialogScene);
+			        dialog.show();
+				} catch(Exception e) {
+					e.printStackTrace();
+				}							
+			}
+		});
+		border.setBottom(AddBtn);
 	}
 	
 	private void setDragable(StackPane modul) {
