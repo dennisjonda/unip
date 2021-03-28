@@ -10,7 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import unip.Main;
+import unip.UniP;
 
 public class MainController extends Application {
 	private int aktuellerReiter;
@@ -62,7 +62,7 @@ public class MainController extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
-			Main.mainController = this;
+			UniP.mainController = this;
 			
 			BorderPane border = (BorderPane)FXMLLoader.load(getClass().getResource("MainGUI.fxml"));
 			HBox navigation = (HBox)FXMLLoader.load(getClass().getResource("Navigation.fxml"));
