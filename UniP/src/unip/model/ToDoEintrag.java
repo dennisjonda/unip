@@ -2,13 +2,13 @@ package unip.model;
 
 public class ToDoEintrag {
 
-	public int NotizPosition;
-	public String Notiz;
-	public boolean Abgehakt;
+	public int notizPosition;
+	public String notiz;
+	public boolean abgehakt;
 	
-	public ToDoEintrag (int NotizPosition, String Notiz, boolean Abgehakt) {
-		this.NotizPosition = NotizPosition;
-		this.Notiz = Notiz;
-		this.Abgehakt = Abgehakt; 
+	public ToDoEintrag (int notizPosition, String notiz, boolean abgehakt) {
+		this.notizPosition = notizPosition;
+		this.notiz = notiz;
+		this.abgehakt = abgehakt; 
 	}
 }
