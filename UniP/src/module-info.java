@@ -9,4 +9,5 @@ module unip {
 	requires javafx.fxml;
 	requires javafx.graphics;
 	requires java.desktop;
+	requires com.google.gson;
 }
