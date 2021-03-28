@@ -22,10 +22,12 @@ public class MainController extends Application {
 	@FXML
 	private void initialize() {
 			reiter = new Node[5];
-			try {		
-			reiter[2]= (Node) FXMLLoader.load(getClass().getResource("StundenplanGUI.fxml"));
-			reiter[3]= (Node) FXMLLoader.load(getClass().getResource("ModulGUI.fxml"));
-			reiter[4]= (Node) FXMLLoader.load(getClass().getResource("ToDoGUI.fxml"));
+			try {	
+			reiter[0]= (Node) FXMLLoader.load(getClass().getResource("KalenderGUI.fxml"));
+			reiter[1]= (Node) FXMLLoader.load(getClass().getResource("StundenplanGUI.fxml"));
+			reiter[2]= (Node) FXMLLoader.load(getClass().getResource("ModulGUI.fxml"));
+			reiter[3]= (Node) FXMLLoader.load(getClass().getResource("ToDoGUI.fxml"));
+			reiter[4]= (Node) FXMLLoader.load(getClass().getResource("NotenGUI.fxml"));
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -38,13 +40,19 @@ public class MainController extends Application {
 	public void navigationListener(ActionEvent event) {
 		Button button = (Button) event.getSource();
 		switch (button.getId()) {
+		case "kalender":
+			aktuellerReiter=0;
+			break;
 		case "stundenplan":
-			aktuellerReiter=2;
+			aktuellerReiter=1;
 			break;
 		case "module":
-			aktuellerReiter=3;
+			aktuellerReiter=2;
 			break;
 		case "todo":
+			aktuellerReiter=3;
+			break;
+		case "noten":
 			aktuellerReiter=4;
 			break;
 		}
