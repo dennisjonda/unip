@@ -189,6 +189,28 @@ public class Datenmanager {
 		String json = readFile("Module.json");
 		if(json==null) {
 			//Habe hunger auf copy pasta und auch hunger irl
+			module.add(new Modul(0, "MIB1", "Grafische Datenverarbeitung: Modelierung", "Klausur", "Testat" ,6));
+			module.add(new Modul(1, "MIB2a", "Audiovisuelle Medien 1: Studiotechnik", "Klausur & Studientagebuch", "Testate", 4));
+			module.add(new Modul(2, "MIB2b", "Audiovisuelle Medien 1: Studioproduktion", "Praktikum", "Anwesenheit", 5));
+			module.add(new Modul(3, "MIB3", "Webprogrammierung 1", "Klausur", "Testate", 6));
+			module.add(new Modul(4, "MIB4a", "Softwareentwicklung 1", "Klausur", "Testate", 3));
+			module.add(new Modul(5, "MIB4b", "Reflexives Lernen", "-", "Testate", 3));
+			module.add(new Modul(6, "MIB5", "Mediengestaltung 1", "Hausarbeit", "Testate", 3));
+			module.add(new Modul(7, "MIB6", "Grafische Datenverarbeitung: Shading", "Klausur", "Testate", 6));
+			module.add(new Modul(8, "MIB7", "Webprogrammierung 2", "Klausur", "Testate", 6));
+			module.add(new Modul(9, "MIB8", "Softwareentwicklung 2", "Klausur", "Testate", 6));
+			module.add(new Modul(10, "MIB9", "Mediengestaltung 2", "Klausur", "Testate", 6));
+			module.add(new Modul(11, "MIB10", "Mathematik", "Klausur", "Testate", 6));
+			module.add(new Modul(12, "MIB12a", "Audiovisuelle Medien 2: Filmtechnik", "Klausur & Studientagebuch", "Testate", 3));
+			module.add(new Modul(13, "MIB12b", "Audiovisuelle Medien 2: Filmproduktion", "Mündliche Prüfung", "Anwesenheit", 3));
+			module.add(new Modul(14, "MIB14", "Softwareentwicklungsprojekt", "Klausur & Projekt", "Anwesenheit", 9));
+			module.add(new Modul(15, "MIB15", "Theoretische Informatik und Algorithmik", "Klausur", "-", 6));
+			module.add(new Modul(16, "MIB16", "Bwl", "Klausur", "-", 3));
+			module.add(new Modul(17, "MIB18", "Medine-Projekt", "Projekt", "Anwesenheit", 9));
+			module.add(new Modul(18, "MIB19", "Mobile Anwendungen 1", "Klausur", "-", 6));
+			module.add(new Modul(19, "MIB21", "IT-und Medienrecht", "Klausur", "-", 3));
+			module.add(new Modul(20, "MIB122", "Seminar", "Anwesenheit", "Hausarbeit und Präsentation", 6));
+			saveModule();
 		} else {
 			JsonArray arr = gson.fromJson(json, JsonArray.class);
 			for(JsonElement element : arr) {
