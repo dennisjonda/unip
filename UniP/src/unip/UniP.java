@@ -25,6 +25,7 @@ public class UniP {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		datenmanager = new Datenmanager();
 	}
 
 }
