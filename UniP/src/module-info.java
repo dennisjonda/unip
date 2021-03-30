@@ -4,6 +4,7 @@ module unip {
 	exports unip.controller;
 	opens unip.view to javafx.fxml;
 	opens unip.controller to javafx.fxml;
+	opens unip.model to com.google.gson;
 	requires javafx.base;
 	requires javafx.controls;
 	requires javafx.fxml;
