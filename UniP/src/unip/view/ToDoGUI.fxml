@@ -13,60 +13,7 @@
    <children>
       <ScrollPane fitToWidth="true" HBox.hgrow="ALWAYS">
                <content>
-                  <VBox fx:id="vbox" spacing="10.0">
-                     <children>
-                        <HBox fillHeight="false" VBox.vgrow="NEVER">
-                           <children>
-                              <TextField HBox.hgrow="ALWAYS" />
-                              <CheckBox mnemonicParsing="false" onAction="#checkBoxListener" HBox.hgrow="NEVER">
-                                 <padding>
-                                    <Insets left="2.0" top="2.0" />
-                                 </padding>
-                              </CheckBox>
-                           </children>
-                        </HBox>
-                        <HBox fillHeight="false" VBox.vgrow="NEVER">
-                           <children>
-                              <TextField HBox.hgrow="ALWAYS" />
-                              <CheckBox mnemonicParsing="false" onAction="#checkBoxListener" HBox.hgrow="NEVER">
-                                 <padding>
-                                    <Insets left="2.0" top="2.0" />
-                                 </padding>
-                              </CheckBox>
-                           </children>
-                        </HBox>
-                        <HBox fillHeight="false" VBox.vgrow="NEVER">
-                           <children>
-                              <TextField HBox.hgrow="ALWAYS" />
-                              <CheckBox mnemonicParsing="false" onAction="#checkBoxListener" HBox.hgrow="NEVER">
-                                 <padding>
-                                    <Insets left="2.0" top="2.0" />
-                                 </padding>
-                              </CheckBox>
-                           </children>
-                        </HBox>
-                        <HBox fillHeight="false" VBox.vgrow="NEVER">
-                           <children>
-                              <TextField HBox.hgrow="ALWAYS" />
-                              <CheckBox mnemonicParsing="false" onAction="#checkBoxListener" HBox.hgrow="NEVER">
-                                 <padding>
-                                    <Insets left="2.0" top="2.0" />
-                                 </padding>
-                              </CheckBox>
-                           </children>
-                        </HBox>
-                        <HBox fillHeight="false" VBox.vgrow="NEVER">
-                           <children>
-                              <TextField HBox.hgrow="ALWAYS" />
-                              <CheckBox mnemonicParsing="false" onAction="#checkBoxListener" HBox.hgrow="NEVER">
-                                 <padding>
-                                    <Insets left="2.0" top="2.0" />
-                                 </padding>
-                              </CheckBox>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
+                  <VBox fx:id="vbox" spacing="10.0"/>
                </content>
          <HBox.margin>
             <Insets right="20.0" />
