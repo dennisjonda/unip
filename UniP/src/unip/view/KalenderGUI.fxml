@@ -39,9 +39,6 @@
                      </children>
                   </HBox>
                </center>
-               <left>
-                  <CheckBox fx:id="stundenplanCheck" mnemonicParsing="false" text="Stundenplan" BorderPane.alignment="CENTER" />
-               </left>
             </BorderPane>
          </children>
          <HBox.margin>
