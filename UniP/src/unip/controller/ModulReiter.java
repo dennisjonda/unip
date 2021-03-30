@@ -3,7 +3,9 @@ package unip.controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -31,6 +33,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import unip.UniP;
+import unip.model.Modul;
 
 public class ModulReiter extends Reiter {
 
@@ -38,16 +42,137 @@ public class ModulReiter extends Reiter {
 	private HBox semester;
 	
 	@Override
-	protected void update() {
-		// TODO Auto-generated method stub
+	public void update() {
+		ObservableList<Node> sem = semester.getChildren();
 		
+		for(int s=0;s<sem.size();s++) {
+			if(sem.get(s) instanceof BorderPane) {
+				ObservableList<Node> module = ((VBox) ((BorderPane) sem.get(s)).getCenter()).getChildren(); 
+				
+				for(int m=0;m<module.size();m++) {
+					Modul modul = UniP.datenmanager.getModul(Integer.parseInt(((StackPane) module.get(m)).getId()));
+					modul.semester = Integer.parseInt(sem.get(s).getId());
+				}
+			}
+		}
 	}
 
 	@Override
 	public void initialize() {
+		UniP.mainController.registerController(this);
+		ArrayList<Modul> module = UniP.datenmanager.getModule(false);
+		
 		int anzSem = 1;
+		for(int i=0;i<module.size();i++) {
+			if(anzSem<module.get(i).semester) {
+				anzSem=module.get(i).semester;
+			}
+		}
+		
 		for(int i=1; i<=anzSem;i++) {
 			addSemesterListener(null);			
+		}
+		
+		for(int i=0; i<module.size();i++) {
+			
+			
+			StackPane modul = new StackPane(); //Eigentliches Modul Anzeigen
+			try {
+				modul = (StackPane) FXMLLoader.load(new File("src/unip/view/ModulBlock.fxml").toURI().toURL());
+				((Text) modul.getChildren().get(0)).setText(module.get(i).modulbezeichnung);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+			setDragable(modul);
+			modul.setId(module.get(i).getID() + "");
+			
+			modul.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent arg0) {
+					try {
+						ArrayList<Modul> module = UniP.datenmanager.getModule(false);
+						VBox content = (VBox) FXMLLoader.load(new File("src/unip/view/ModulPopUp.fxml").toURI().toURL());
+				        
+				        final Stage dialog = new Stage();
+				        dialog.setTitle("Modul ändern");
+				        dialog.initModality(Modality.APPLICATION_MODAL);
+				        dialog.initOwner(semester.getScene().getWindow());
+				        
+						String kuerzel = ((Text) ((StackPane) arg0.getSource()).getChildren().get(0)).getText();								        
+						((TextField) content.getChildren().get(3)).setText(kuerzel);
+						((Text) content.getChildren().get(0)).setText("Modul ändern");
+						
+						int modulid = Integer.parseInt(((StackPane) arg0.getSource()).getId());
+						
+						
+						
+						((TextField) content.getChildren().get(3)).setText(UniP.datenmanager.getModul(modulid).modulbezeichnung);
+						((TextField) content.getChildren().get(5)).setText(UniP.datenmanager.getModul(modulid).modulname);
+						((TextField) content.getChildren().get(7)).setText(UniP.datenmanager.getModul(modulid).prüfungsform);
+						((TextField) content.getChildren().get(9)).setText(UniP.datenmanager.getModul(modulid).prüfungsvoraussetzung);
+						((TextField) content.getChildren().get(11)).setText(UniP.datenmanager.getModul(modulid).crp + "");
+						((TextField) content.getChildren().get(13)).setText(UniP.datenmanager.getModul(modulid).note + "");
+						
+				        Button loeschenBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(0);
+				        Button speichernBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(1);
+				        
+				        loeschenBtn.setText("Löschen");
+				        loeschenBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+							@Override
+							public void handle(ActionEvent event) {
+								StackPane source = (StackPane) arg0.getSource();
+								UniP.datenmanager.removeModul(Integer.parseInt(source.getId()));
+								((VBox) source.getParent()).getChildren().remove(source);
+								dialog.close();							
+							}
+						});
+				        
+				        speichernBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+							@Override
+							public void handle(ActionEvent arg) {
+								String kuerzel = ((TextField) content.getChildren().get(3)).getText();
+								String name = ((TextField) content.getChildren().get(5)).getText();	
+								String prüfungsform = ((TextField) content.getChildren().get(7)).getText();	
+								String prüfungsvoraussetzung = ((TextField) content.getChildren().get(9)).getText();
+								int crp = 0;
+								try { crp = Integer.parseInt(((TextField) content.getChildren().get(11)).getText());} catch(NumberFormatException e) {System.out.println("Wrong crp");};
+								
+								double note = 0d;
+								try {note = Double.parseDouble(((TextField) content.getChildren().get(13)).getText());} catch(NumberFormatException e) {System.out.println("Wrong Grade");};
+								
+								Text modultxt = ((Text) ((StackPane) arg0.getSource()).getChildren().get(0));
+								int modulid = Integer.parseInt(((StackPane) modultxt.getParent()).getId());
+								int semester = Integer.parseInt(((BorderPane) ((VBox) ((StackPane) modultxt.getParent()).getParent()).getParent()).getId());
+								modultxt.setText(kuerzel);
+								
+								UniP.datenmanager.changeModul(new Modul(modulid, kuerzel, name, prüfungsform, prüfungsvoraussetzung, note, crp, semester));
+								
+								dialog.close();
+							}
+						});
+				        
+				        Scene dialogScene = new Scene(content);
+				        dialog.setScene(dialogScene);
+				        dialog.show();
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+					
+				}
+			});
+			
+			ObservableList<Node> semesterchildren = semester.getChildren();
+			for(int s=0;s<semesterchildren.size();s++) {
+				if(semesterchildren.get(s) instanceof BorderPane && Integer.parseInt(semesterchildren.get(s).getId()) == module.get(i).semester) {
+					((VBox) ((BorderPane) semesterchildren.get(s)).getCenter()).getChildren().add(modul);
+					break;
+				}
+			}
+			
+			
 		}
 		
 	}
@@ -59,6 +184,7 @@ public class ModulReiter extends Reiter {
 		
 		BorderPane border = new BorderPane();
 		semester.getChildren().add(border);
+		border.idProperty().set(((semester.getChildrenUnmodifiable().size()/2) + ""));
 		
 		VBox vbox = new VBox();
 		setDropTarget(vbox);
@@ -87,10 +213,6 @@ public class ModulReiter extends Reiter {
 			        dialog.initModality(Modality.APPLICATION_MODAL);
 			        dialog.initOwner(((Node) event.getSource()).getScene().getWindow());
 			        
-			        
-			        
-			        
-			        
 			        Button abbrechenBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(0);
 			        Button speichernBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(1);
 			        
@@ -109,9 +231,16 @@ public class ModulReiter extends Reiter {
 							String kuerzel = ((TextField) content.getChildren().get(3)).getText();
 							String name = ((TextField) content.getChildren().get(5)).getText();	
 							String prüfungsform = ((TextField) content.getChildren().get(7)).getText();	
-							String prüfungsvoraussetzung = ((TextField) content.getChildren().get(9)).getText();	
-							String cpr = ((TextField) content.getChildren().get(11)).getText();	
-							String note = ((TextField) content.getChildren().get(13)).getText();
+							String prüfungsvoraussetzung = ((TextField) content.getChildren().get(9)).getText();
+							int crp = 0;
+							try { crp = Integer.parseInt(((TextField) content.getChildren().get(11)).getText());} catch(NumberFormatException e) {System.out.println("Wrong crp");};
+							
+							double note = 0d;
+							try {note = Double.parseDouble(((TextField) content.getChildren().get(13)).getText());} catch(NumberFormatException e) {System.out.println("Wrong Grade");};
+							
+							int semester = Integer.parseInt(((BorderPane) ((Button) event.getSource()).getParent()).getId());
+							int modulid = UniP.datenmanager.getModulID();
+							UniP.datenmanager.addModul(new Modul(modulid, kuerzel, name, prüfungsform, prüfungsvoraussetzung, note, crp, semester));
 							
 							StackPane modul = new StackPane(); //Eigentliches Modul Anzeigen
 							try {
@@ -121,6 +250,7 @@ public class ModulReiter extends Reiter {
 								e.printStackTrace();
 							}			
 							setDragable(modul);
+							modul.setId(modulid + "");
 							
 							modul.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -137,6 +267,14 @@ public class ModulReiter extends Reiter {
 										String kuerzel = ((Text) ((StackPane) arg0.getSource()).getChildren().get(0)).getText();								        
 										((TextField) content.getChildren().get(3)).setText(kuerzel);
 										((Text) content.getChildren().get(0)).setText("Modul ändern");
+										ArrayList<Modul> module = UniP.datenmanager.getModule(false);
+										
+										((TextField) content.getChildren().get(3)).setText(UniP.datenmanager.getModul(modulid).modulbezeichnung);
+										((TextField) content.getChildren().get(5)).setText(UniP.datenmanager.getModul(modulid).modulname);
+										((TextField) content.getChildren().get(7)).setText(UniP.datenmanager.getModul(modulid).prüfungsform);
+										((TextField) content.getChildren().get(9)).setText(UniP.datenmanager.getModul(modulid).prüfungsvoraussetzung);
+										((TextField) content.getChildren().get(11)).setText(UniP.datenmanager.getModul(modulid).crp + "");
+										((TextField) content.getChildren().get(13)).setText(UniP.datenmanager.getModul(modulid).note + "");
 										
 								        Button loeschenBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(0);
 								        Button speichernBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(1);
@@ -147,6 +285,7 @@ public class ModulReiter extends Reiter {
 											@Override
 											public void handle(ActionEvent event) {
 												StackPane source = (StackPane) arg0.getSource();
+												UniP.datenmanager.removeModul(Integer.parseInt(source.getId()));
 												((VBox) source.getParent()).getChildren().remove(source);
 												dialog.close();							
 											}
@@ -159,11 +298,19 @@ public class ModulReiter extends Reiter {
 												String kuerzel = ((TextField) content.getChildren().get(3)).getText();
 												String name = ((TextField) content.getChildren().get(5)).getText();	
 												String prüfungsform = ((TextField) content.getChildren().get(7)).getText();	
-												String prüfungsvoraussetzung = ((TextField) content.getChildren().get(9)).getText();	
-												String cpr = ((TextField) content.getChildren().get(11)).getText();	
-												String note = ((TextField) content.getChildren().get(13)).getText();
+												String prüfungsvoraussetzung = ((TextField) content.getChildren().get(9)).getText();
+												int crp = 0;
+												try { crp = Integer.parseInt(((TextField) content.getChildren().get(11)).getText());} catch(NumberFormatException e) {System.out.println("Wrong crp");};
 												
-												((Text) ((StackPane) arg0.getSource()).getChildren().get(0)).setText(kuerzel);
+												double note = 0d;
+												try {note = Double.parseDouble(((TextField) content.getChildren().get(13)).getText());} catch(NumberFormatException e) {System.out.println("Wrong Grade");};
+												
+												Text modultxt = ((Text) ((StackPane) arg0.getSource()).getChildren().get(0));
+												int modulid = Integer.parseInt(((StackPane) modultxt.getParent()).getId());
+												int semester = Integer.parseInt(((BorderPane) ((VBox) ((StackPane) modultxt.getParent()).getParent()).getParent()).getId());
+												modultxt.setText(kuerzel);
+												
+												UniP.datenmanager.changeModul(new Modul(modulid, kuerzel, name, prüfungsform, prüfungsvoraussetzung, note, crp, semester));
 												
 												dialog.close();
 											}
