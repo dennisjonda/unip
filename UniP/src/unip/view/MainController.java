@@ -1,7 +1,10 @@
 package unip.view;
 
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,27 +13,37 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import unip.UniP;
+import unip.controller.Reiter;
 
 public class MainController extends Application {
 	private int aktuellerReiter;
 	private Node[] reiter;
+	public ArrayList<Reiter> controller = new ArrayList<Reiter>();
 	
 	@FXML
 	private HBox navigation;
 	
 	@FXML
 	private void initialize() {
-			reiter = new Node[5];
-			try {	
-			reiter[0]= (Node) FXMLLoader.load(getClass().getResource("KalenderGUI.fxml"));
-			reiter[1]= (Node) FXMLLoader.load(getClass().getResource("StundenplanGUI.fxml"));
-			reiter[2]= (Node) FXMLLoader.load(getClass().getResource("ModulGUI.fxml"));
-			reiter[3]= (Node) FXMLLoader.load(getClass().getResource("ToDoGUI.fxml"));
-			reiter[4]= (Node) FXMLLoader.load(getClass().getResource("NotenGUI.fxml"));
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
+		UniP.mainController = this;
+		reiter = new Node[5];
+		try {	
+		reiter[0]= (Node) FXMLLoader.load(getClass().getResource("KalenderGUI.fxml"));
+		reiter[1]= (Node) FXMLLoader.load(getClass().getResource("StundenplanGUI.fxml"));
+		reiter[2]= (Node) FXMLLoader.load(getClass().getResource("ModulGUI.fxml"));
+		reiter[3]= (Node) FXMLLoader.load(getClass().getResource("ToDoGUI.fxml"));
+		reiter[4]= (Node) FXMLLoader.load(getClass().getResource("NotenGUI.fxml"));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void registerController(Reiter controller) {
+		if(!this.controller.contains(controller)) {
+			this.controller.add(controller);
+		}
 	}
 	
 	public static void run(String[] args) {
@@ -56,14 +69,18 @@ public class MainController extends Application {
 			aktuellerReiter=4;
 			break;
 		}
+		
+		for(int i=0;i<controller.size();i++) {
+			controller.get(i).update();
+		}					
+		UniP.datenmanager.saveAll();
+		
 		((BorderPane) button.getScene().getRoot()).setCenter(reiter[aktuellerReiter]);
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		try {
-			UniP.mainController = this;
-			
+		try {			
 			BorderPane border = (BorderPane)FXMLLoader.load(getClass().getResource("MainGUI.fxml"));
 			HBox navigation = (HBox)FXMLLoader.load(getClass().getResource("Navigation.fxml"));
 			border.setTop(navigation);
@@ -71,6 +88,17 @@ public class MainController extends Application {
 			primaryStage.setTitle("UniP");
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				
+				@Override
+				public void handle(WindowEvent arg0) {
+					ArrayList<Reiter> controller = UniP.mainController.controller;
+					for(int i=0;i<controller.size();i++) {
+						controller.get(i).update();
+					}					
+					UniP.datenmanager.saveAll();
+				}
+			});
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
