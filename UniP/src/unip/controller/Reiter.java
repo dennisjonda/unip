@@ -9,7 +9,7 @@ public abstract class Reiter {
 		update();
 	}
 	
-	protected abstract void update();
+	public abstract void update();
 	
 	public abstract void initialize();
 	

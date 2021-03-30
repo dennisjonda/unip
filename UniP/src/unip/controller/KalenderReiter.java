@@ -36,7 +36,7 @@ public class KalenderReiter extends Reiter{
 	private boolean woche = true; //True wenn Wochenansicht; false wenn Monatsansicht
 	
 	@Override
-	protected void update() {
+	public void update() {
 		// TODO Auto-generated method stub
 		
 	}
