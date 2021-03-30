@@ -108,6 +108,15 @@ public class Datenmanager {
 		}
 	}
 	
+	public void addModul(Modul modul) {
+		module.add(modul);
+	}
+	
+	public void changeModul(Modul modul) {
+		removeModul(modul.getID());
+		addModul(modul);
+	}
+	
 	public void removeModul (int id) {
 		for(int i = 0; i<module.size(); i++) {
 			if(module.get(i).getID() == id ) {
@@ -115,6 +124,33 @@ public class Datenmanager {
 				break;
 			}
 		}
+	}
+	
+	public Modul getModul(int id) {
+		for(int i = 0; i<module.size(); i++) {
+			if(module.get(i).getID() == id ) {
+				return module.get(i);
+			}
+		}
+		return null;
+	}
+	
+	public Stundenplaneintrag getStdEintrag(int id) {
+		for(int i = 0; i<stundenplan.size(); i++) {
+			if(stundenplan.get(i).getID() == id ) {
+				return stundenplan.get(i);
+			}
+		}
+		return null;
+	}
+	
+	public Termin getTermin(int id) {
+		for(int i = 0; i<termine.size(); i++) {
+			if(termine.get(i).getID() == id ) {
+				return termine.get(i);
+			}
+		}
+		return null;
 	}
 	
 	public void addStdEintrag (Stundenplaneintrag eintrag) {
@@ -139,25 +175,55 @@ public class Datenmanager {
 		todoliste.add(eintrag);
 	}
 	
-	public void changeToDo(ToDoEintrag eintrag) {
+	public void selectToDo(int id, boolean haken) {
 		for(int i=0;i<todoliste.size();i++) {
-			if(todoliste.get(i).notizPosition == eintrag.notizPosition) {
-				todoliste.remove(i);
+			if(todoliste.get(i).notizPosition == id) {
+				todoliste.get(i).abgehakt = haken;
+				break;
 			}
 		}
-		addToDo(eintrag);
 	}
 	
-	public boolean removeAbgeschlossen() {
+	public boolean removeToDo(boolean abgeschlossen) { //wenn true nur abeschlossene, Wenn false alle
 		boolean output = false;
 		for(int i = 0; i<todoliste.size(); i++) {
-			if(todoliste.get(i).abgehakt) {
+			if(!abgeschlossen || todoliste.get(i).abgehakt) {
 				todoliste.remove(i);
 				output = true;
 				i--;
 			}
 		}
 		return output;
+	}
+	
+	public int getTerminID() {
+		int id = 0;
+		for(int i=0;i<termine.size();i++) {
+			if(id<=termine.get(i).getID()) {
+				id=termine.get(i).getID()+1;
+			}
+		}
+		return id;
+	}
+	
+	public int getModulID() {
+		int id = 0;
+		for(int i=0;i<module.size();i++) {
+			if(id<=module.get(i).getID()) {
+				id=module.get(i).getID()+1;
+			}
+		}
+		return id;
+	}
+	
+	public int getStundenplanID() {
+		int id = 0;
+		for(int i=0;i<stundenplan.size();i++) {
+			if(id<=stundenplan.get(i).getID()) {
+				id=stundenplan.get(i).getID()+1;
+			}
+		}
+		return id;
 	}
 	
 	private void saveTermin() {
@@ -189,27 +255,27 @@ public class Datenmanager {
 		String json = readFile("Module.json");
 		if(json==null) {
 			//Habe hunger auf copy pasta und auch hunger irl
-			module.add(new Modul(0, "MIB1", "Grafische Datenverarbeitung: Modelierung", "Klausur", "Testat" ,6));
-			module.add(new Modul(1, "MIB2a", "Audiovisuelle Medien 1: Studiotechnik", "Klausur & Studientagebuch", "Testate", 4));
-			module.add(new Modul(2, "MIB2b", "Audiovisuelle Medien 1: Studioproduktion", "Praktikum", "Anwesenheit", 5));
-			module.add(new Modul(3, "MIB3", "Webprogrammierung 1", "Klausur", "Testate", 6));
-			module.add(new Modul(4, "MIB4a", "Softwareentwicklung 1", "Klausur", "Testate", 3));
-			module.add(new Modul(5, "MIB4b", "Reflexives Lernen", "-", "Testate", 3));
-			module.add(new Modul(6, "MIB5", "Mediengestaltung 1", "Hausarbeit", "Testate", 3));
-			module.add(new Modul(7, "MIB6", "Grafische Datenverarbeitung: Shading", "Klausur", "Testate", 6));
-			module.add(new Modul(8, "MIB7", "Webprogrammierung 2", "Klausur", "Testate", 6));
-			module.add(new Modul(9, "MIB8", "Softwareentwicklung 2", "Klausur", "Testate", 6));
-			module.add(new Modul(10, "MIB9", "Mediengestaltung 2", "Klausur", "Testate", 6));
-			module.add(new Modul(11, "MIB10", "Mathematik", "Klausur", "Testate", 6));
-			module.add(new Modul(12, "MIB12a", "Audiovisuelle Medien 2: Filmtechnik", "Klausur & Studientagebuch", "Testate", 3));
-			module.add(new Modul(13, "MIB12b", "Audiovisuelle Medien 2: Filmproduktion", "Mündliche Prüfung", "Anwesenheit", 3));
-			module.add(new Modul(14, "MIB14", "Softwareentwicklungsprojekt", "Klausur & Projekt", "Anwesenheit", 9));
-			module.add(new Modul(15, "MIB15", "Theoretische Informatik und Algorithmik", "Klausur", "-", 6));
-			module.add(new Modul(16, "MIB16", "Bwl", "Klausur", "-", 3));
-			module.add(new Modul(17, "MIB18", "Medine-Projekt", "Projekt", "Anwesenheit", 9));
-			module.add(new Modul(18, "MIB19", "Mobile Anwendungen 1", "Klausur", "-", 6));
-			module.add(new Modul(19, "MIB21", "IT-und Medienrecht", "Klausur", "-", 3));
-			module.add(new Modul(20, "MIB122", "Seminar", "Anwesenheit", "Hausarbeit und Präsentation", 6));
+			module.add(new Modul(0, "MIB1", "Grafische Datenverarbeitung: Modelierung", "Klausur", "Testat",6 , 1));
+			module.add(new Modul(1, "MIB2a", "Audiovisuelle Medien 1: Studiotechnik", "Klausur & Studientagebuch", "Testate", 4, 1));
+			module.add(new Modul(2, "MIB2b", "Audiovisuelle Medien 1: Studioproduktion", "Praktikum", "Anwesenheit", 5, 1));
+			module.add(new Modul(3, "MIB3", "Webprogrammierung 1", "Klausur", "Testate", 6, 1));
+			module.add(new Modul(4, "MIB4a", "Softwareentwicklung 1", "Klausur", "Testate", 3, 1));
+			module.add(new Modul(5, "MIB4b", "Reflexives Lernen", "-", "Testate", 3, 1));
+			module.add(new Modul(6, "MIB5", "Mediengestaltung 1", "Hausarbeit", "Testate", 3, 1));
+			module.add(new Modul(7, "MIB6", "Grafische Datenverarbeitung: Shading", "Klausur", "Testate", 6, 2));
+			module.add(new Modul(8, "MIB7", "Webprogrammierung 2", "Klausur", "Testate", 6, 2));
+			module.add(new Modul(9, "MIB8", "Softwareentwicklung 2", "Klausur", "Testate", 6, 2));
+			module.add(new Modul(10, "MIB9", "Mediengestaltung 2", "Klausur", "Testate", 6, 2));
+			module.add(new Modul(11, "MIB10", "Mathematik", "Klausur", "Testate", 6, 2));
+			module.add(new Modul(12, "MIB12a", "Audiovisuelle Medien 2: Filmtechnik", "Klausur & Studientagebuch", "Testate", 3, 3));
+			module.add(new Modul(13, "MIB12b", "Audiovisuelle Medien 2: Filmproduktion", "Mündliche Prüfung", "Anwesenheit", 3, 3));
+			module.add(new Modul(14, "MIB14", "Softwareentwicklungsprojekt", "Klausur & Projekt", "Anwesenheit", 9, 3));
+			module.add(new Modul(15, "MIB15", "Theoretische Informatik und Algorithmik", "Klausur", "-", 6, 3));
+			module.add(new Modul(16, "MIB16", "Bwl", "Klausur", "-", 3, 3));
+			module.add(new Modul(17, "MIB18", "Medien-Projekt", "Projekt", "Anwesenheit", 9, 4));
+			module.add(new Modul(18, "MIB19", "Mobile Anwendungen 1", "Klausur", "-", 6, 4));
+			module.add(new Modul(19, "MIB21", "IT-und Medienrecht", "Klausur", "-", 3, 4));
+			module.add(new Modul(20, "MIB22", "Seminar", "Anwesenheit", "Hausarbeit und Präsentation", 6, 4));
 			saveModule();
 		} else {
 			JsonArray arr = gson.fromJson(json, JsonArray.class);
@@ -238,6 +304,9 @@ public class Datenmanager {
 	}
 	
 	private void saveToDo() {
+		for(int i=0;i<todoliste.size();i++) {
+			todoliste.get(i).notizPosition = i;
+		}		
 		Gson gson = new Gson();
 		JsonArray json = gson.toJsonTree(todoliste).getAsJsonArray();
 		writeToFile(json.toString(), "ToDoListe.json");

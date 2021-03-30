@@ -5,7 +5,7 @@ public class Stundenplaneintrag {
 	private int blockID; // setzt sich aus TagBlock zusammen
 	public String bezeichnung;
 	
-	private Stundenplaneintrag(String bezeichnung, int tag, int block) { 
+	public Stundenplaneintrag(String bezeichnung, int tag, int block) { 
 		this.bezeichnung = bezeichnung;
 		this.blockID = (tag*10) + block;
 	}
