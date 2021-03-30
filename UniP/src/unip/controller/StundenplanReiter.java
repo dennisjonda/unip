@@ -1,6 +1,7 @@
 package unip.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,7 +13,9 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -22,11 +25,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import unip.UniP;
+import unip.model.*;
 
 public class StundenplanReiter extends Reiter {
 
 	@FXML
 	private GridPane grid;
+	@FXML
+	private VBox semester;
 	
 	public void loeschenListener(ActionEvent event) {
 		try {
@@ -48,6 +55,7 @@ public class StundenplanReiter extends Reiter {
 							((StackPane) node).getChildren().clear();
 						}
 					}
+					UniP.datenmanager.getStundenplan().clear();
 					dialog.close();
 				}
 	        });
@@ -76,8 +84,23 @@ public class StundenplanReiter extends Reiter {
         
         try {            	
             VBox content = (VBox) FXMLLoader.load(new File("src/unip/view/EintragPopUpGUI.fxml").toURI().toURL());
+            int semNmb = 1;
+            ObservableList<Node> children = semester.getChildren();
+            for(int i=0;i<children.size();i++) {
+            	if(children.get(i) instanceof RadioButton && ((RadioButton) children.get(i)).isSelected()) {
+            		semNmb = Integer.parseInt(((RadioButton) children.get(i)).getId());
+            	}
+            }
             
             ObservableList<Node> popUpItems = content.getChildren();
+            ArrayList<Modul> modulArray = UniP.datenmanager.getModule(false);
+            
+            ArrayList<Modul> modulArray2 = new ArrayList<Modul>();
+            for(int i=0;i<modulArray.size();i++) {
+            	if(modulArray.get(i).semester == semNmb) {
+            		modulArray2.add(modulArray.get(i));
+            	}
+            }
             
             if(!neu) {
         		((Text) popUpItems.get(0)).setText("Eintrag ändern:");
@@ -85,7 +108,10 @@ public class StundenplanReiter extends Reiter {
         	}
             
             ChoiceBox<String> choiceBox = (ChoiceBox<String>) popUpItems.get(3);
-            String[] module = {"Sonstiges", "Modul1", "Modul2"};
+            String[] module = new String[modulArray2.size()];
+            for(int i=0;i<module.length;i++) {
+            	module[i] = modulArray2.get(i).modulbezeichnung;
+            }
 			choiceBox.setItems(FXCollections.observableArrayList(module));
 			choiceBox.setOnAction(new EventHandler<ActionEvent>() {
 				
@@ -134,6 +160,7 @@ public class StundenplanReiter extends Reiter {
 					if(neu) {
 						dialog.close();
 					} else {
+						UniP.datenmanager.removeStdEintrag(Integer.parseInt(((Text) ((StackPane)event.getSource()).getChildren().get(0)).getId()));
 						((StackPane)event.getSource()).getChildren().clear();
 						dialog.close();
 					}
@@ -152,6 +179,9 @@ public class StundenplanReiter extends Reiter {
 						for (Node node : grid.getChildren()) {
 					        if(grid.getRowIndex(node) == choiceBox3.getSelectionModel().getSelectedIndex()+1 && grid.getColumnIndex(node) == choiceBox2.getSelectionModel().getSelectedIndex()+1) {
 					            ((StackPane) node).getChildren().add(new Text(((TextField) popUpItems.get(5)).getText()));
+					            Stundenplaneintrag eintrag = new Stundenplaneintrag(((TextField) popUpItems.get(5)).getText(), grid.getColumnIndex(node), grid.getRowIndex(node));
+					            ((Text) ((StackPane) node).getChildren().get(0)).setId(eintrag.getID() + "");
+					            UniP.datenmanager.addStdEintrag(eintrag);
 					            break;
 					        }
 					    }
@@ -159,6 +189,7 @@ public class StundenplanReiter extends Reiter {
 						for (Node node : grid.getChildren()) {
 					        if(grid.getRowIndex(node) == choiceBox3.getSelectionModel().getSelectedIndex()+1 && grid.getColumnIndex(node) == choiceBox2.getSelectionModel().getSelectedIndex()+1) {
 					            ((Text) ((StackPane) node).getChildren().get(0)).setText(((TextField) popUpItems.get(5)).getText());
+					            UniP.datenmanager.changeStdEintrag(new Stundenplaneintrag(((TextField) popUpItems.get(5)).getText(), grid.getColumnIndex(node), grid.getRowIndex(node)));
 					            break;
 					        }
 					    }							
@@ -195,15 +226,44 @@ public class StundenplanReiter extends Reiter {
 	}
 	
 	@Override
-	protected void update() {
+	public void update() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void initialize() {
-		// TODO Auto-generated method stub
+		ArrayList<Modul> module = UniP.datenmanager.getModule(false);
 		
+		int anzSem = 1;
+		for(int i=0;i<module.size();i++) {
+			if(anzSem<module.get(i).semester) {
+				anzSem=module.get(i).semester;
+			}
+		}
+		
+		ToggleGroup group = new ToggleGroup();
+		for(int i=1;i<=anzSem;i++) {
+			RadioButton semesterRadio = new RadioButton(i + ".Semester");
+			semesterRadio.setId(i + "");
+			semesterRadio.setToggleGroup(group);
+			if(i==1) {
+				semesterRadio.setSelected(true);
+			}
+			semester.getChildren().add(semesterRadio);
+		}
+		
+		ArrayList<Stundenplaneintrag> eintraege = UniP.datenmanager.getStundenplan();
+		
+		for(int i=0;i<eintraege.size();i++) {
+			for (Node node : grid.getChildren()) {
+		        if(grid.getRowIndex(node) == eintraege.get(i).getBlock() && grid.getColumnIndex(node) == eintraege.get(i).getTag()) {
+		            ((StackPane) node).getChildren().add(new Text(eintraege.get(i).bezeichnung));
+		            ((Text) ((StackPane) node).getChildren().get(0)).setId(eintraege.get(i).getID() + "");
+		            break;
+		        }
+		    }
+		}
 	}
 
 }

@@ -94,16 +94,8 @@
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </HBox.margin>
          <children>
-            <VBox spacing="5.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Semester:" />
-                  <RadioButton mnemonicParsing="false" selected="true" text="1.Semester">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="semester" />
-                     </toggleGroup>
-                  </RadioButton>
-                  <RadioButton mnemonicParsing="false" text="2.Semester" toggleGroup="$semester" />
-               </children>
+            <VBox spacing="5.0" AnchorPane.topAnchor="0.0" fx:id= "semester" >
+               
             </VBox>
             <Button mnemonicParsing="false" onAction="#loeschenListener" text="Löschen" AnchorPane.bottomAnchor="0.0">
                <font>
