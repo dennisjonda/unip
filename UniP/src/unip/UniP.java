@@ -14,6 +14,7 @@ public class UniP {
 	public static Datenmanager datenmanager; 
 
 	public static void main(String[] args) {
+		datenmanager = new Datenmanager();
 		try {
 			Thread thread = new Thread(new Runnable() {				
 				@Override
@@ -25,7 +26,6 @@ public class UniP {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		datenmanager = new Datenmanager();
 	}
 
 }
