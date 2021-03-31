@@ -199,6 +199,9 @@ public class ModulReiter extends Reiter {
 		border.setTop(semCap);
 		
 		Button AddBtn = new Button("Modul\nhinzufügen");
+		AddBtn.getStyleClass().add("btn");
+		AddBtn.getStyleClass().add("btn-success");
+		AddBtn.getStyleClass().add("btn-sm");
 		AddBtn.setTextAlignment(TextAlignment.CENTER);
 		BorderPane.setAlignment(AddBtn, Pos.CENTER);
 		AddBtn.setOnAction(new EventHandler<ActionEvent>() {
