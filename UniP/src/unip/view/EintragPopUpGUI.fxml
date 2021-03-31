@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -10,11 +11,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" styleClass="background" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Neuer Eintrag:">
          <font>
-            <Font name="System Bold" size="14.0" />
+            <Font name="Nunito Sans ExtraBold" size="14.0" />
          </font>
       </Text>
       <Separator>
@@ -29,16 +30,22 @@
          <VBox.margin>
             <Insets top="5.0" />
          </VBox.margin>
+         <font>
+            <Font name="Nunito Sans SemiBold" size="12.0" />
+         </font>
       </Text>
       <ChoiceBox />
       <Text layoutX="10.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bezeichnung:">
          <VBox.margin>
             <Insets top="5.0" />
          </VBox.margin>
+         <font>
+            <Font name="Nunito Sans SemiBold" size="12.0" />
+         </font>
       </Text>
       <TextField VBox.vgrow="ALWAYS">
          <VBox.margin>
-            <Insets right="15.0" />
+            <Insets left="15.0" right="15.0" />
          </VBox.margin>
       </TextField>
       <Separator layoutX="10.0" layoutY="29.0">
@@ -49,25 +56,45 @@
             <Insets bottom="5.0" top="5.0" />
          </padding>
       </Separator>
-      <Text layoutX="10.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tag" />
+      <Text layoutX="10.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tag">
+         <font>
+            <Font name="Nunito Sans SemiBold" size="12.0" />
+         </font></Text>
       <ChoiceBox layoutX="10.0" layoutY="101.0" />
       <Text layoutX="10.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Block">
          <VBox.margin>
             <Insets top="5.0" />
          </VBox.margin>
+         <font>
+            <Font name="Nunito Sans SemiBold" size="12.0" />
+         </font>
       </Text>
       <ChoiceBox layoutX="10.0" layoutY="155.0" />
       <HBox alignment="TOP_CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
          <children>
-            <Button mnemonicParsing="false" text="Löschen" />
-            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Speichern" />
+            <Button mnemonicParsing="false" text="Löschen">
+               <font>
+                  <Font name="Nunito Sans SemiBold" size="12.0" />
+               </font>
+               <styleClass>
+                  <String fx:value="btn" />
+                  <String fx:value="btn-md" />
+                  <String fx:value="btn-danger" />
+               </styleClass></Button>
+            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" styleClass="btn, btn-lg, btn-danger" stylesheets="@stylesheet.css" text="Speichern">
+               <font>
+                  <Font name="Nunito Sans SemiBold" size="12.0" />
+               </font></Button>
          </children>
          <VBox.margin>
-            <Insets bottom="10.0" right="10.0" top="20.0" />
+            <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
          </VBox.margin>
       </HBox>
    </children>
    <padding>
-      <Insets left="15.0" />
+      <Insets left="0.0" />
    </padding>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
 </VBox>

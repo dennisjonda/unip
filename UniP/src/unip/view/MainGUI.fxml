@@ -3,6 +3,6 @@
 <?import javafx.scene.layout.BorderPane?>
 
 
-<BorderPane focusTraversable="true" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane focusTraversable="true" styleClass="background" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
 
 </BorderPane>

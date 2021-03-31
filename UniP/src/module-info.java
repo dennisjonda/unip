@@ -11,4 +11,5 @@ module unip {
 	requires javafx.graphics;
 	requires java.desktop;
 	requires com.google.gson;
+	requires org.kordamp.bootstrapfx.core;
 }

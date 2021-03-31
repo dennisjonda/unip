@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 
-<HBox spacing="5.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unip.controller.ModulReiter">
+<HBox spacing="5.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unip.controller.ModulReiter">
    <children>
       <HBox fx:id="semester" spacing="5.0" />
       <StackPane alignment="BOTTOM_CENTER">
          <children>
-            <Button mnemonicParsing="false" onAction="#addSemesterListener" text="+" />
+            <Button mnemonicParsing="false" onAction="#addSemesterListener" text="+">
+               <styleClass>
+                  <String fx:value="btn" />
+                  <String fx:value="btn-success" />
+               </styleClass></Button>
          </children>
       </StackPane>
    </children>

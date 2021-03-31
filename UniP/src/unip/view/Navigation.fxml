@@ -1,15 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 
-<HBox fx:id="navigation" alignment="CENTER" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unip.view.MainController">
+<HBox fx:id="navigation" alignment="CENTER" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unip.view.MainController">
 	<children>
-	   <Button fx:id="kalender" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigationListener" text="Kalender" HBox.hgrow="ALWAYS" />
-	   <Button fx:id="stundenplan" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigationListener" text="Stundenplan" HBox.hgrow="ALWAYS" />
-	   <Button fx:id="module" layoutX="650.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigationListener" text="Module" HBox.hgrow="ALWAYS" />
-	   <Button fx:id="todo" layoutX="1238.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigationListener" text="To-Do Liste" HBox.hgrow="ALWAYS" />
-	   <Button fx:id="noten" layoutX="1238.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigationListener" text="Notenübersicht" HBox.hgrow="ALWAYS" />
+      <ImageView fitHeight="33.0" fitWidth="58.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@logo.png" />
+         </image>
+      </ImageView>
+	   <Button fx:id="kalender" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigationListener" text="Kalender" HBox.hgrow="ALWAYS">
+         <styleClass>
+            <String fx:value="btn" />
+            <String fx:value="btn-sm" />
+            <String fx:value="btn-info" />
+            <String fx:value="first" />
+         </styleClass></Button>
+	   <Button fx:id="stundenplan" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigationListener" text="Stundenplan" HBox.hgrow="ALWAYS">
+         <styleClass>
+            <String fx:value="btn" />
+            <String fx:value="btn-sm" />
+            <String fx:value="btn-info" />
+            <String fx:value="middle" />
+         </styleClass></Button>
+	   <Button fx:id="module" layoutX="650.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigationListener" text="Module" HBox.hgrow="ALWAYS">
+	    <styleClass>
+            <String fx:value="btn" />
+            <String fx:value="btn-sm" />
+            <String fx:value="btn-info" />
+            <String fx:value="middle" />
+         </styleClass></Button>
+	   <Button fx:id="todo" layoutX="1238.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigationListener" text="To-Do Liste" HBox.hgrow="ALWAYS">
+	   	<styleClass>
+            <String fx:value="btn" />
+            <String fx:value="btn-sm" />
+            <String fx:value="btn-info" />
+            <String fx:value="middle" />
+         </styleClass></Button>
+	   <Button fx:id="noten" layoutX="1238.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigationListener" text="Notenübersicht" HBox.hgrow="ALWAYS">
+	   	 <styleClass>
+            <String fx:value="btn" />
+            <String fx:value="btn-sm" />
+            <String fx:value="btn-info" />
+            <String fx:value="last" />
+         </styleClass></Button>
 	</children>
 </HBox>
-
