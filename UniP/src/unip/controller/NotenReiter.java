@@ -136,8 +136,17 @@ public class NotenReiter extends Reiter {
 		
 		double avgNote = sumnote/ (double) count;
 		
-		grid.add(new Text(avgNote + ""), 1, grid.getRowCount()-1);
-		grid.add(new Text(gesCrp + ""), 2, grid.getRowCount()-1);
+		Text gesTxt = new Text("Gesamt");
+		Text gesNoteTxt = new Text(avgNote + "");
+		Text gesCrpTxt = new Text(gesCrp + "");
+		
+		grid.add(gesTxt , 0, grid.getRowCount()-1);
+		grid.add(gesNoteTxt, 1, grid.getRowCount()-1);
+		grid.add(gesCrpTxt, 2, grid.getRowCount()-1);
+		
+		GridPane.setHalignment(gesTxt, HPos.CENTER);
+		GridPane.setHalignment(gesNoteTxt, HPos.CENTER);
+		GridPane.setHalignment(gesCrpTxt, HPos.CENTER);
 	}
 
 }
