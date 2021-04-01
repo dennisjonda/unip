@@ -227,12 +227,33 @@ public class StundenplanReiter extends Reiter {
 	
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		ArrayList<Modul> module = UniP.datenmanager.getModule(false);
+		
+		semester.getChildren().clear();
+		
+		int anzSem = 1;
+		for(int i=0;i<module.size();i++) {
+			if(anzSem<module.get(i).semester) {
+				anzSem=module.get(i).semester;
+			}
+		}
+		
+		ToggleGroup group = new ToggleGroup();
+		for(int i=1;i<=anzSem;i++) {
+			RadioButton semesterRadio = new RadioButton(i + ".Semester");
+			semesterRadio.setId(i + "");
+			semesterRadio.setToggleGroup(group);
+			if(i==1) {
+				semesterRadio.setSelected(true);
+			}
+			semester.getChildren().add(semesterRadio);
+		}
 		
 	}
 
 	@Override
 	public void initialize() {
+		UniP.mainController.registerController(this);
 		ArrayList<Modul> module = UniP.datenmanager.getModule(false);
 		
 		int anzSem = 1;

@@ -366,6 +366,7 @@ public class ModulReiter extends Reiter {
 					
 					((VBox) modul.getParent()).getChildren().remove(modul);
 					target.getChildren().add(modul);
+					UniP.datenmanager.getModul(Integer.parseInt(modul.getId())).semester = Integer.parseInt(((BorderPane) target.getParent()).getId());
 				}
 				
 				event.consume();
