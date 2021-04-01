@@ -1,11 +1,6 @@
 package unip;
 
-import java.time.LocalTime;
-import java.util.Calendar;
-
 import unip.model.Datenmanager;
-import unip.model.Termin;
-import unip.model.Termin.Eventtype;
 import unip.view.MainController;
 
 public class UniP {

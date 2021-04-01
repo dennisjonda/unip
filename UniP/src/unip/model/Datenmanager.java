@@ -254,7 +254,6 @@ public class Datenmanager {
 		Gson gson = new Gson();
 		String json = readFile("Module.json");
 		if(json==null) {
-			//Habe hunger auf copy pasta und auch hunger irl
 			module.add(new Modul(0, "MIB1", "Grafische Datenverarbeitung: Modelierung", "Klausur", "Testat",6 , 1));
 			module.add(new Modul(1, "MIB2a", "Audiovisuelle Medien 1: Studiotechnik", "Klausur & Studientagebuch", "Testate", 4, 1));
 			module.add(new Modul(2, "MIB2b", "Audiovisuelle Medien 1: Studioproduktion", "Praktikum", "Anwesenheit", 5, 1));
