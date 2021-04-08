@@ -20,7 +20,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -101,7 +100,6 @@ public class KalenderReiter extends Reiter{
 							
 							Text text = new Text(numberToDay(x) + "\n" +  date);
 							text.setTextAlignment(TextAlignment.CENTER);
-							text.setFont(new Font(25));
 							kalender.add(text, x, y);
 						} else {
 							kalender.getColumnConstraints().add(new ColumnConstraints(80));
@@ -109,11 +107,9 @@ public class KalenderReiter extends Reiter{
 					} else if(x==0) { //erste Spalte
 						if(y!=0 && y<=10) {
 							Text text = new Text("0" + (y-1) + ":00");
-							text.setFont(new Font(25));
 							kalender.add(text, x, y);
 						} else if(y!=0 && y>10) {
 							Text text = new Text((y-1) + ":00");
-							text.setFont(new Font(25));
 							kalender.add(text, x, y);
 						}
 					}
@@ -135,12 +131,10 @@ public class KalenderReiter extends Reiter{
 							kalender.getColumnConstraints().add(new ColumnConstraints(150));
 							
 							Text text = new Text(numberToDay(x));
-							text.setFont(new Font(25));
 							kalender.add(text, x, y);
 						} else {
 							Text text = new Text(cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.GERMAN) + "\n" + cal.get(Calendar.YEAR));
 							text.setTextAlignment(TextAlignment.CENTER);
-							text.setFont(new Font(18));
 							kalender.add(text, x, y);
 							
 							kalender.getColumnConstraints().add(new ColumnConstraints(120));
@@ -149,7 +143,6 @@ public class KalenderReiter extends Reiter{
 					} else if(x==0) { //erste Spalte
 						if(y!=0) {
 							Text text = new Text("Woche" + y);
-							text.setFont(new Font(25));
 							kalender.add(text, x, y);
 							kalender.getRowConstraints().add(new RowConstraints(150));
 						}
