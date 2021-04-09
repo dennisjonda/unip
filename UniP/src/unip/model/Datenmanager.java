@@ -27,7 +27,8 @@ public class Datenmanager {
 		readAll();
 	}
 
-	public ArrayList<Termin> getWoche(Calendar von){
+	public ArrayList<Termin> getWoche(Calendar input){
+		Calendar von = (Calendar) input.clone();
 		ArrayList<Termin> termin2 = new ArrayList<Termin>();
 		von.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		Calendar bis = (Calendar) von.clone();
@@ -41,7 +42,8 @@ public class Datenmanager {
 		return termin2;
 	}
 	
-	public ArrayList<Termin> getMonat(Calendar von){
+	public ArrayList<Termin> getMonat(Calendar input){
+		Calendar von = (Calendar) input.clone();
 		ArrayList<Termin> termin2 = new ArrayList<Termin>();
 		von.set(Calendar.DAY_OF_MONTH, 1);
 		Calendar bis = (Calendar) von.clone();
