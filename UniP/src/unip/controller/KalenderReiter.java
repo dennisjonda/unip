@@ -1,27 +1,53 @@
 package unip.controller;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 
+import javafx.beans.InvalidationListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import unip.UniP;
+import unip.model.Termin;
+import unip.model.Termin.Eventtype;
 
 public class KalenderReiter extends Reiter{
 	@FXML
@@ -42,10 +68,118 @@ public class KalenderReiter extends Reiter{
 
 	@Override
 	public void initialize() {
+		UniP.mainController.registerController(this);
 		
 		startDate = Calendar.getInstance();
 		startDate.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		drawKalender();		
+	}
+	
+	private void terminListener(Node source, Calendar date) {
+		try {
+			VBox content = (VBox) FXMLLoader.load(new File("src/unip/view/TerminPopUp.fxml").toURI().toURL());
+			boolean neu;
+			if(source instanceof VBox) {
+				neu=((VBox) source).getChildrenUnmodifiable().size()==1;
+			} else {
+				neu=((StackPane) source).getChildrenUnmodifiable().size()==0;
+			}
+	        
+	        final Stage dialog = new Stage();
+	        dialog.initModality(Modality.APPLICATION_MODAL);
+	        dialog.initOwner(source.getScene().getWindow());
+	        
+	        dialog.setTitle(date.get(Calendar.DAY_OF_MONTH) + "." + (date.get(Calendar.MONTH)+1) + "." + date.get(Calendar.YEAR));
+	        
+	        Text popUpTitel = (Text) content.getChildren().get(0);
+	        TextField titel = (TextField) content.getChildren().get(3);
+	        ChoiceBox<Integer> von = (ChoiceBox<Integer>) ((HBox) content.getChildren().get(4)).getChildren().get(1);
+	        ChoiceBox<Integer> bis = (ChoiceBox<Integer>) ((HBox) content.getChildren().get(5)).getChildren().get(1);
+	        ToggleGroup kategorie = (ToggleGroup) ((RadioButton) content.getChildren().get(8)).getToggleGroup();
+	        TextArea beschreibung = (TextArea) content.getChildren().get(14);
+	        Button abbruchBtn =  (Button) ((HBox) content.getChildren().get(15)).getChildren().get(0);
+	        Button speichernBtn =  (Button) ((HBox) content.getChildren().get(15)).getChildren().get(1);
+	        
+	        Integer[] hours = new Integer[24];
+	        for(int i=0;i<=23;i++) {
+	        	hours[i] = i;
+	        }
+	        
+	        von.setItems(FXCollections.observableArrayList(hours));
+	        bis.setItems(FXCollections.observableArrayList(hours));
+	        
+	        if(neu) { //neuer Termin
+		        if(woche) { 
+		        	von.getSelectionModel().select(GridPane.getRowIndex(source)-1);
+		        	bis.getSelectionModel().select(GridPane.getRowIndex(source)-1);
+		        } else {
+		        	von.getSelectionModel().select(0);
+		        	bis.getSelectionModel().select(1);
+		        }
+		        
+		        abbruchBtn.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent arg0) {
+						dialog.close();						
+					}		        	
+				});
+	        } else { //Termin ändern
+	        	Termin termin = UniP.datenmanager.getTermin(Integer.parseInt(source.getId()));
+	        	popUpTitel.setText("Termin ändern");
+	        	
+	        	titel.setText(termin.titel);
+	        	von.getSelectionModel().select(termin.von);
+	        	bis.getSelectionModel().select(termin.bis);
+	        	kategorie.selectToggle(kategorie.getToggles().get(termin.kategorie.ordinal()));
+	        	beschreibung.setText(termin.beschreibung);
+	        	
+	        	abbruchBtn.setText("Löschen");
+	        	abbruchBtn.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent arg0) {
+						UniP.datenmanager.removeTermin(termin.getID());
+						drawKalender();
+						dialog.close();
+					}
+				});
+	        }
+	        
+	        speichernBtn.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent arg0) {
+					int id = 0;
+					if(neu) {
+						id = UniP.datenmanager.getTerminID();
+					} else {
+						id = Integer.parseInt(source.getId());
+					}
+					Termin termin = new Termin(id, titel.getText(), beschreibung.getText(), von.getValue(), bis.getValue(), date, Termin.stringToEventType(((RadioButton) kategorie.getSelectedToggle()).getText()));
+					if(UniP.datenmanager.isOpen(termin)) {
+						if(von.getSelectionModel().getSelectedIndex()<=bis.getSelectionModel().getSelectedIndex()) {
+							if(neu) {
+								UniP.datenmanager.addTermin(termin);
+							} else {
+								UniP.datenmanager.changeTermin(termin);
+							}
+							drawKalender();
+							dialog.close();
+						} else {
+							popUpTitel.setText("\"Von\" muss kleiner \"Bis\"");
+							von.requestFocus();
+						}
+					} else {
+						popUpTitel.setText("Zeitraum belegt");
+						von.requestFocus();
+					}
+				}
+			});
+	        
+	        Scene dialogScene = new Scene(content);
+	        dialog.setScene(dialogScene);
+	        dialog.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void modusListener(ActionEvent event) {
@@ -85,6 +219,8 @@ public class KalenderReiter extends Reiter{
 		
 		Calendar cal = (Calendar) startDate.clone();
 		
+		ArrayList<Termin> termine = UniP.datenmanager.getWoche(startDate);
+		
 		if(woche) { //Wochenansicht
 			for(int x=0; x<8;x++) {
 				for(int y=0;y<25;y++) {
@@ -112,8 +248,33 @@ public class KalenderReiter extends Reiter{
 							Text text = new Text((y-1) + ":00");
 							kalender.add(text, x, y);
 						}
-					}
-					
+					} else { //Wochenzellen
+						StackPane termin = new StackPane();
+						kalender.add(termin, x, y);
+						Calendar date = (Calendar)cal.clone();
+						date.add(Calendar.DAY_OF_YEAR, -1);
+						termin.setOnMouseClicked(new EventHandler<Event>() {
+							@Override
+							public void handle(Event arg0) {
+								terminListener((Node) arg0.getSource(), date);											
+							}
+						});
+						for(int i=0;i<termine.size();i++) {
+							if(date.get(Calendar.DAY_OF_YEAR)==termine.get(i).datum.get(Calendar.DAY_OF_YEAR) && date.get(Calendar.YEAR)==termine.get(i).datum.get(Calendar.YEAR)) {
+								if((y-1) == termine.get(i).von) {
+									termin.setId(termine.get(i).getID() + "");
+									termin.setStyle("-fx-background-color: #80ba24; -fx-border-color: #4a5c66");
+									Text terminname = new Text(termine.get(i).titel);
+									terminname.setFill(Color.WHITE);
+									termin.getChildren().add(terminname);
+									
+									int length = termine.get(i).bis + 1 - termine.get(i).von;
+									
+									GridPane.setRowSpan(termin, length);
+								}
+							}
+						}
+					}					
 				}
 			}
 		} else { //Monatsansicht
@@ -147,14 +308,42 @@ public class KalenderReiter extends Reiter{
 							kalender.getRowConstraints().add(new RowConstraints(150));
 						}
 					} else {
-						HBox hbox = new HBox();
-						kalender.add(hbox, x, y);
+						VBox vbox = new VBox();
+						kalender.add(vbox, x, y);
 						
 						int nmb = 7*(y-1)+x-(day-1);
 						
 						if(nmb>=1 && nmb<=cal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+							Calendar currentday = (Calendar) cal.clone();
+							currentday.set(Calendar.DAY_OF_MONTH, nmb);
 							Text text = new Text(nmb + "");
-							hbox.getChildren().add(text);
+							vbox.getChildren().add(text);
+							vbox.setOnMouseClicked(new EventHandler<Event>() {
+								@Override
+								public void handle(Event arg0) {
+									terminListener((Node) arg0.getSource(), currentday);											
+								}
+							});
+							
+							for(int i=0;i<termine.size();i++) {
+								if(cal.get(Calendar.MONTH)==termine.get(i).datum.get(Calendar.MONTH) && cal.get(Calendar.YEAR)==termine.get(i).datum.get(Calendar.YEAR)) {
+									if(nmb == termine.get(i).datum.get(Calendar.DAY_OF_MONTH)) {
+										StackPane termin = new StackPane();
+										termin.setId(termine.get(i).getID() + "");
+										termin.setStyle("-fx-background-color: #80ba24; -fx-border-color: #4a5c66");
+										Text terminname = new Text(termine.get(i).titel);
+										terminname.setFill(Color.WHITE);
+										termin.getChildren().add(terminname);
+										termin.setOnMouseClicked(new EventHandler<Event>() {
+											@Override
+											public void handle(Event arg0) {
+												terminListener((Node) arg0.getSource(), currentday);											
+											}
+										});
+										vbox.getChildren().add(termin);
+									}
+								}
+							}
 						}
 					}
 					if(y>(cal.getActualMaximum(Calendar.DAY_OF_MONTH)+day-1)/7) {

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox spacing="5.0" styleClass="background" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Neuer Termin:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </Text>
+      <Separator>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding>
+      </Separator>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Titel:">
+         <font>
+            <Font name="Nunito Sans SemiBold" size="12.0" />
+         </font>
+         <VBox.margin>
+            <Insets left="15.0" />
+         </VBox.margin>
+      </Text>
+      <TextField>
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </TextField>
+      <HBox alignment="CENTER" spacing="10.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Von:" />
+            <ChoiceBox />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" layoutX="10.0" layoutY="43.0" spacing="10.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Bis:" />
+            <ChoiceBox />
+         </children>
+      </HBox>
+      <Separator layoutX="10.0" layoutY="164.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding>
+      </Separator>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Kategorie:">
+         <font>
+            <Font name="Nunito Sans SemiBold" size="12.0" />
+         </font>
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </Text>
+      <RadioButton mnemonicParsing="false" text="Klausur">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+         <toggleGroup>
+            <ToggleGroup fx:id="eventtype" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton layoutX="58.0" layoutY="203.0" mnemonicParsing="false" text="Testat" toggleGroup="$eventtype">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </RadioButton>
+      <RadioButton layoutX="58.0" layoutY="227.0" mnemonicParsing="false" selected="true" text="Uni" toggleGroup="$eventtype">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </RadioButton>
+      <RadioButton layoutX="58.0" layoutY="248.0" mnemonicParsing="false" text="Freizeit" toggleGroup="$eventtype">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </RadioButton>
+      <Separator>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding>
+      </Separator>
+      <Text layoutX="10.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Beschreibung:">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+         <font>
+            <Font name="Nunito Sans SemiBold" size="12.0" />
+         </font>
+      </Text>
+      <TextArea prefColumnCount="1" prefRowCount="3" wrapText="true">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </TextArea>
+      <HBox alignment="TOP_CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Button mnemonicParsing="false" text="Abbrechen">
+               <font>
+                  <Font name="Nunito Sans SemiBold" size="12.0" />
+               </font>
+               <styleClass>
+                  <String fx:value="btn" />
+                  <String fx:value="btn-md" />
+                  <String fx:value="btn-danger" />
+               </styleClass></Button>
+            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" styleClass="btn, btn-lg, btn-danger" stylesheets="@stylesheet.css" text="Speichern">
+               <font>
+                  <Font name="Nunito Sans SemiBold" size="12.0" />
+               </font></Button>
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+   <padding>
+      <Insets left="0.0" />
+   </padding>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</VBox>
