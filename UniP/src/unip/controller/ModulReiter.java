@@ -386,7 +386,7 @@ public class ModulReiter extends Reiter {
 			@Override
 			public void handle(DragEvent event) {
 				if(event.getGestureSource() instanceof StackPane && event.getDragboard().hasString()) {
-					((VBox) event.getSource()).setStyle("-fx-background-color: lightgreen;");
+					((VBox) event.getSource()).setStyle("-fx-background-color: #80ba24;");
 				}
 			}		
 		});
