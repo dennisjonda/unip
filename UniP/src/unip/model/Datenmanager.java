@@ -70,6 +70,21 @@ public class Datenmanager {
 		return ausgabe;
 	}
 	
+	public boolean isOpen(Termin termin) {
+		boolean open = true;
+		for(int i=0;i<termine.size();i++) {
+			if(termine.get(i).datum.get(Calendar.DAY_OF_YEAR) == termin.datum.get(Calendar.DAY_OF_YEAR) && termine.get(i).datum.get(Calendar.YEAR) == termin.datum.get(Calendar.YEAR) && termine.get(i).getID()!=termin.getID()) {
+				if(termine.get(i).von<=termin.bis && termine.get(i).von>=termin.von) {
+					open=false;
+				}
+				if(termine.get(i).bis<=termin.bis && termine.get(i).bis>=termin.von) {
+					open=false;
+				}
+			}
+		}
+		return open;
+	}
+	
 	public ArrayList<Modul> getModule (boolean abgeschlossen){ //wenn true nur abeschlossene, Wenn false alle
 		ArrayList<Modul> ausgabe = new ArrayList<Modul>();
 		
