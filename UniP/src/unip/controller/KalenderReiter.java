@@ -80,7 +80,7 @@ public class KalenderReiter extends Reiter{
 			VBox content = (VBox) FXMLLoader.load(new File("src/unip/view/TerminPopUp.fxml").toURI().toURL());
 			boolean neu;
 			if(source instanceof VBox) {
-				neu=((VBox) source).getChildrenUnmodifiable().size()==1;
+				neu=true;
 			} else {
 				neu=((StackPane) source).getChildrenUnmodifiable().size()==0;
 			}
@@ -219,9 +219,8 @@ public class KalenderReiter extends Reiter{
 		
 		Calendar cal = (Calendar) startDate.clone();
 		
-		ArrayList<Termin> termine = UniP.datenmanager.getWoche(startDate);
-		
 		if(woche) { //Wochenansicht
+			ArrayList<Termin> termine = UniP.datenmanager.getWoche(startDate);
 			for(int x=0; x<8;x++) {
 				for(int y=0;y<25;y++) {
 					if(y==0) { //erste Zeile
@@ -278,6 +277,7 @@ public class KalenderReiter extends Reiter{
 				}
 			}
 		} else { //Monatsansicht
+			ArrayList<Termin> termine = UniP.datenmanager.getMonat(startDate);
 			for(int x=0; x<8;x++) {
 				for(int y=0;;y++) {
 					int day;
@@ -337,7 +337,8 @@ public class KalenderReiter extends Reiter{
 										termin.setOnMouseClicked(new EventHandler<Event>() {
 											@Override
 											public void handle(Event arg0) {
-												terminListener((Node) arg0.getSource(), currentday);											
+												terminListener((Node) arg0.getSource(), currentday);	
+												arg0.consume();
 											}
 										});
 										vbox.getChildren().add(termin);
@@ -362,6 +363,72 @@ public class KalenderReiter extends Reiter{
 		}
 		
 		kalender.setGridLinesVisible(true);
+		drawTimer();
+	}
+	
+	private void drawTimer() {
+		//Ausrechnen der Timer Daten
+		Calendar heute = Calendar.getInstance();
+		ArrayList<Termin> termine = new ArrayList<Termin>();
+		ArrayList<Integer> zeit = new ArrayList<Integer>();
+		
+		ArrayList<Termin> tests = UniP.datenmanager.getTerminTyp(Eventtype.KLAUSUR, true);
+		tests.addAll(UniP.datenmanager.getTerminTyp(Eventtype.TESTAT, true));
+		
+		for(int i=0; i<tests.size();i++) {
+			int abstandtage = 0;
+			if(tests.get(i).datum.get(Calendar.YEAR)==heute.get(Calendar.YEAR)) { // gleiches jahr
+				abstandtage=tests.get(i).datum.get(Calendar.DAY_OF_YEAR)-heute.get(Calendar.DAY_OF_YEAR);
+			} else {
+				abstandtage+=heute.getActualMaximum(Calendar.DAY_OF_YEAR) - heute.get(Calendar.DAY_OF_YEAR); //Tage bis Jahres ende
+				abstandtage+=(tests.get(i).datum.get(Calendar.YEAR) - heute.get(Calendar.YEAR) - 1)*365; // Ganze Jahre zwischen Terminen
+				abstandtage+=tests.get(i).datum.get(Calendar.DAY_OF_YEAR);
+			}
+			if(abstandtage>99) { //keine Termine über 99Tage im Timer
+				continue;
+			}
+			
+			if(termine.size()!=0) { //nicht der erste Termin
+				for(int t = 0;t<=termine.size();t++) {
+					if(t<termine.size()) {
+						if(abstandtage<zeit.get(t) || (abstandtage==zeit.get(t) && tests.get(i).von<termine.get(t).von)) { //wenn früher
+							termine.add(t, tests.get(i));
+							zeit.add(t, abstandtage);
+							break;
+						}
+					} else { //wenn neuer Termin später als alle bisherigen
+						termine.add(tests.get(i));
+						zeit.add(abstandtage);
+						break;
+					}
+				}
+			} else {
+				termine.add(tests.get(i));
+				zeit.add(abstandtage);
+			}
+		}
+		
+		//Anzeigen der Timer
+		alarmBox.getChildren().clear();
+		
+		for(int i=0;i<termine.size();i++) {
+			BorderPane alarm = new BorderPane();
+			alarm.setStyle("-fx-background-color: #80ba24; -fx-border-color: #4a5c66");
+			
+			Text abstand = new Text("noch " + zeit.get(i) + " Tage");
+			Text titel = new Text(termine.get(i).titel);
+			Text datum = new Text(termine.get(i).datum.get(Calendar.DAY_OF_MONTH) + "." + (termine.get(i).datum.get(Calendar.MONTH)+1) + "." + termine.get(i).datum.get(Calendar.YEAR));
+			
+			alarm.setTop(abstand);
+			alarm.setCenter(titel);
+			alarm.setBottom(datum);
+			
+			BorderPane.setMargin(abstand, new Insets(5, 10, 5, 10));
+			BorderPane.setMargin(titel, new Insets(5, 10, 5, 10));
+			BorderPane.setMargin(datum, new Insets(5, 10, 5, 10));
+			
+			alarmBox.getChildren().add(alarm);			
+		}
 	}
 	
 	private String numberToDay(int tag) {
