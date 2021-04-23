@@ -171,7 +171,7 @@ public class StundenplanReiter extends Reiter {
 			speichernBtn.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent arg0) {
-					if(((TextField) popUpItems.get(5)).getText().isEmpty()) {
+					if(((TextField) popUpItems.get(5)).getText().isEmpty() || ((TextField) popUpItems.get(5)).getText().length()>30) {
 						((TextField) popUpItems.get(5)).requestFocus();
 						return;
 					}
