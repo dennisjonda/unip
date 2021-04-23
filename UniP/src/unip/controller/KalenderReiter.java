@@ -155,14 +155,18 @@ public class KalenderReiter extends Reiter{
 					}
 					Termin termin = new Termin(id, titel.getText(), beschreibung.getText(), von.getValue(), bis.getValue(), date, Termin.stringToEventType(((RadioButton) kategorie.getSelectedToggle()).getText()));
 					if(UniP.datenmanager.isOpen(termin)) {
-						if(von.getSelectionModel().getSelectedIndex()<=bis.getSelectionModel().getSelectedIndex()) {
-							if(neu) {
-								UniP.datenmanager.addTermin(termin);
+						if(von.getSelectionModel().getSelectedIndex()<=bis.getSelectionModel().getSelectedIndex()) { //test von kleiner Bis
+							if(termin.titel!=null && !termin.titel.isBlank() && termin.titel.length()<=30) {
+								if(neu) {
+									UniP.datenmanager.addTermin(termin);
+								} else {
+									UniP.datenmanager.changeTermin(termin);
+								}
+								drawKalender();
+								dialog.close();
 							} else {
-								UniP.datenmanager.changeTermin(termin);
+								titel.requestFocus();
 							}
-							drawKalender();
-							dialog.close();
 						} else {
 							popUpTitel.setText("\"Von\" muss kleiner \"Bis\"");
 							von.requestFocus();
