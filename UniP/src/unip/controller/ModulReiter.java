@@ -28,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -82,8 +83,13 @@ public class ModulReiter extends Reiter {
 				((Text) modul.getChildren().get(0)).setText(module.get(i).modulbezeichnung);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}			
-			setDragable(modul);
+			}
+			if(module.get(i).note==0d) {
+				setDragable(modul);
+			} else {
+				modul.setStyle("-fx-background-color: #80ba24");
+			}
+			
 			modul.setId(module.get(i).getID() + "");
 			
 			modul.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -139,18 +145,37 @@ public class ModulReiter extends Reiter {
 								String prüfungsvoraussetzung = ((TextField) content.getChildren().get(9)).getText();
 								int crp = 0;
 								try { crp = Integer.parseInt(((TextField) content.getChildren().get(11)).getText());} catch(NumberFormatException e) {System.out.println("Wrong crp");};
+								if(crp<0) {
+									crp=0;
+								}
 								
 								double note = 0d;
 								try {note = Double.parseDouble(((TextField) content.getChildren().get(13)).getText());} catch(NumberFormatException e) {System.out.println("Wrong Grade");};
+								if(note<1d || note>4d) {
+									note = 0d;
+								}
+								note*=10d;
+								note=Math.round(note);
+								note/=10d;
 								
 								Text modultxt = ((Text) ((StackPane) arg0.getSource()).getChildren().get(0));
 								int modulid = Integer.parseInt(((StackPane) modultxt.getParent()).getId());
 								int semester = Integer.parseInt(((BorderPane) ((VBox) ((StackPane) modultxt.getParent()).getParent()).getParent()).getId());
-								modultxt.setText(kuerzel);
 								
-								UniP.datenmanager.changeModul(new Modul(modulid, kuerzel, name, prüfungsform, prüfungsvoraussetzung, note, crp, semester));
-								
-								dialog.close();
+								if(!kuerzel.isBlank() && kuerzel.length()<=10 && !name.isBlank() && name.length()<=30) {
+									modultxt.setText(kuerzel);
+									UniP.datenmanager.changeModul(new Modul(modulid, kuerzel, name, prüfungsform, prüfungsvoraussetzung, note, crp, semester));
+									StackPane modul = (StackPane) modultxt.getParent();
+									if(note==0d) {
+										modul.setStyle("");
+										setDragable(modul);
+										modul.setStyle("-fx-border-color: Black;");
+									} else {
+										modul.setOnDragDetected(null);
+										modul.setStyle("-fx-background-color: #80ba24");
+									}
+									dialog.close();	
+								}
 							}
 						});
 				        
@@ -237,101 +262,138 @@ public class ModulReiter extends Reiter {
 							String prüfungsvoraussetzung = ((TextField) content.getChildren().get(9)).getText();
 							int crp = 0;
 							try { crp = Integer.parseInt(((TextField) content.getChildren().get(11)).getText());} catch(NumberFormatException e) {System.out.println("Wrong crp");};
+							if(crp<0) {
+								crp=0;
+							}
 							
 							double note = 0d;
 							try {note = Double.parseDouble(((TextField) content.getChildren().get(13)).getText());} catch(NumberFormatException e) {System.out.println("Wrong Grade");};
+							if(note<1d || note>4d) {
+								note = 0d;
+							}
+							note*=10d;
+							note=Math.round(note);
+							note/=10d;
 							
-							int semester = Integer.parseInt(((BorderPane) ((Button) event.getSource()).getParent()).getId());
-							int modulid = UniP.datenmanager.getModulID();
-							UniP.datenmanager.addModul(new Modul(modulid, kuerzel, name, prüfungsform, prüfungsvoraussetzung, note, crp, semester));
-							
-							StackPane modul = new StackPane(); //Eigentliches Modul Anzeigen
-							try {
-								modul = (StackPane) FXMLLoader.load(new File("src/unip/view/ModulBlock.fxml").toURI().toURL());
-								((Text) modul.getChildren().get(0)).setText(kuerzel);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}			
-							setDragable(modul);
-							modul.setId(modulid + "");
-							
-							modul.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-								@Override
-								public void handle(MouseEvent arg0) {
-									try {
-										VBox content = (VBox) FXMLLoader.load(new File("src/unip/view/ModulPopUp.fxml").toURI().toURL());
-								        
-								        final Stage dialog = new Stage();
-								        dialog.setTitle("Modul ändern");
-								        dialog.initModality(Modality.APPLICATION_MODAL);
-								        dialog.initOwner(((Node) event.getSource()).getScene().getWindow());
-								        
-										String kuerzel = ((Text) ((StackPane) arg0.getSource()).getChildren().get(0)).getText();								        
-										((TextField) content.getChildren().get(3)).setText(kuerzel);
-										((Text) content.getChildren().get(0)).setText("Modul ändern");
-										ArrayList<Modul> module = UniP.datenmanager.getModule(false);
-										
-										((TextField) content.getChildren().get(3)).setText(UniP.datenmanager.getModul(modulid).modulbezeichnung);
-										((TextField) content.getChildren().get(5)).setText(UniP.datenmanager.getModul(modulid).modulname);
-										((TextField) content.getChildren().get(7)).setText(UniP.datenmanager.getModul(modulid).prüfungsform);
-										((TextField) content.getChildren().get(9)).setText(UniP.datenmanager.getModul(modulid).prüfungsvoraussetzung);
-										((TextField) content.getChildren().get(11)).setText(UniP.datenmanager.getModul(modulid).crp + "");
-										((TextField) content.getChildren().get(13)).setText(UniP.datenmanager.getModul(modulid).note + "");
-										
-								        Button loeschenBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(0);
-								        Button speichernBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(1);
-								        
-								        loeschenBtn.setText("Löschen");
-								        loeschenBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-											@Override
-											public void handle(ActionEvent event) {
-												StackPane source = (StackPane) arg0.getSource();
-												UniP.datenmanager.removeModul(Integer.parseInt(source.getId()));
-												((VBox) source.getParent()).getChildren().remove(source);
-												dialog.close();							
-											}
-										});
-								        
-								        speichernBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-											@Override
-											public void handle(ActionEvent arg) {
-												String kuerzel = ((TextField) content.getChildren().get(3)).getText();
-												String name = ((TextField) content.getChildren().get(5)).getText();	
-												String prüfungsform = ((TextField) content.getChildren().get(7)).getText();	
-												String prüfungsvoraussetzung = ((TextField) content.getChildren().get(9)).getText();
-												int crp = 0;
-												try { crp = Integer.parseInt(((TextField) content.getChildren().get(11)).getText());} catch(NumberFormatException e) {System.out.println("Wrong crp");};
-												
-												double note = 0d;
-												try {note = Double.parseDouble(((TextField) content.getChildren().get(13)).getText());} catch(NumberFormatException e) {System.out.println("Wrong Grade");};
-												
-												Text modultxt = ((Text) ((StackPane) arg0.getSource()).getChildren().get(0));
-												int modulid = Integer.parseInt(((StackPane) modultxt.getParent()).getId());
-												int semester = Integer.parseInt(((BorderPane) ((VBox) ((StackPane) modultxt.getParent()).getParent()).getParent()).getId());
-												modultxt.setText(kuerzel);
-												
-												UniP.datenmanager.changeModul(new Modul(modulid, kuerzel, name, prüfungsform, prüfungsvoraussetzung, note, crp, semester));
-												
-												dialog.close();
-											}
-										});
-								        
-								        Scene dialogScene = new Scene(content);
-								        dialog.setScene(dialogScene);
-								        dialog.show();
-									} catch(Exception e) {
-										e.printStackTrace();
-									}
-									
+							if(!kuerzel.isBlank() && kuerzel.length()<=10 && !name.isBlank() && name.length()<=30) {
+								int semester = Integer.parseInt(((BorderPane) ((Button) event.getSource()).getParent()).getId());
+								int modulid = UniP.datenmanager.getModulID();
+								
+								StackPane modul = new StackPane(); //Eigentliches Modul Anzeigen
+								try {
+									modul = (StackPane) FXMLLoader.load(new File("src/unip/view/ModulBlock.fxml").toURI().toURL());
+									((Text) modul.getChildren().get(0)).setText(kuerzel);
+								} catch (Exception e) {
+									e.printStackTrace();
 								}
-							});
-							
-							((VBox) ((BorderPane) ((Button) event.getSource()).getParent()).getCenter()).getChildren().add(modul);	
-							
-							dialog.close();
+								if(note==0d) {
+									setDragable(modul);
+								} else {
+									modul.setStyle("-fx-background-color: #80ba24");
+								}
+								modul.setId(modulid + "");
+								
+								modul.setOnMouseClicked(new EventHandler<MouseEvent>() {
+	
+									@Override
+									public void handle(MouseEvent arg0) {
+										try {
+											VBox content = (VBox) FXMLLoader.load(new File("src/unip/view/ModulPopUp.fxml").toURI().toURL());
+									        
+									        final Stage dialog = new Stage();
+									        dialog.setTitle("Modul ändern");
+									        dialog.initModality(Modality.APPLICATION_MODAL);
+									        dialog.initOwner(((Node) event.getSource()).getScene().getWindow());
+									        
+											String kuerzel = ((Text) ((StackPane) arg0.getSource()).getChildren().get(0)).getText();								        
+											((TextField) content.getChildren().get(3)).setText(kuerzel);
+											((Text) content.getChildren().get(0)).setText("Modul ändern");
+											ArrayList<Modul> module = UniP.datenmanager.getModule(false);
+											
+											((TextField) content.getChildren().get(3)).setText(UniP.datenmanager.getModul(modulid).modulbezeichnung);
+											((TextField) content.getChildren().get(5)).setText(UniP.datenmanager.getModul(modulid).modulname);
+											((TextField) content.getChildren().get(7)).setText(UniP.datenmanager.getModul(modulid).prüfungsform);
+											((TextField) content.getChildren().get(9)).setText(UniP.datenmanager.getModul(modulid).prüfungsvoraussetzung);
+											((TextField) content.getChildren().get(11)).setText(UniP.datenmanager.getModul(modulid).crp + "");
+											((TextField) content.getChildren().get(13)).setText(UniP.datenmanager.getModul(modulid).note + "");
+											
+									        Button loeschenBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(0);
+									        Button speichernBtn = (Button) ((HBox) content.getChildren().get(14)).getChildren().get(1);
+									        
+									        loeschenBtn.setText("Löschen");
+									        loeschenBtn.setOnAction(new EventHandler<ActionEvent>() {
+	
+												@Override
+												public void handle(ActionEvent event) {
+													StackPane source = (StackPane) arg0.getSource();
+													UniP.datenmanager.removeModul(Integer.parseInt(source.getId()));
+													((VBox) source.getParent()).getChildren().remove(source);
+													dialog.close();							
+												}
+											});
+									        
+									        speichernBtn.setOnAction(new EventHandler<ActionEvent>() {
+	
+												@Override
+												public void handle(ActionEvent arg) {
+													String kuerzel = ((TextField) content.getChildren().get(3)).getText();
+													String name = ((TextField) content.getChildren().get(5)).getText();	
+													String prüfungsform = ((TextField) content.getChildren().get(7)).getText();	
+													String prüfungsvoraussetzung = ((TextField) content.getChildren().get(9)).getText();
+													
+													int crp = 0;
+													try { crp = Integer.parseInt(((TextField) content.getChildren().get(11)).getText());} catch(NumberFormatException e) {System.out.println("Wrong crp");};
+													if(crp<0) {
+														crp=0;
+													}
+													
+													double note = 0d;
+													try {note = Double.parseDouble(((TextField) content.getChildren().get(13)).getText());} catch(NumberFormatException e) {System.out.println("Wrong Grade");};
+													if(note<1d || note>4d) {
+														note = 0d;
+													}
+													note*=10d;
+													note=Math.round(note);
+													note/=10d;
+													
+													Text modultxt = ((Text) ((StackPane) arg0.getSource()).getChildren().get(0));
+													int modulid = Integer.parseInt(((StackPane) modultxt.getParent()).getId());
+													int semester = Integer.parseInt(((BorderPane) ((VBox) ((StackPane) modultxt.getParent()).getParent()).getParent()).getId());
+													
+													if(!kuerzel.isBlank() && kuerzel.length()<=10 && !name.isBlank() && name.length()<=30) {
+														modultxt.setText(kuerzel);
+														
+														StackPane modul = (StackPane) modultxt.getParent();
+														if(note==0d) {
+															modul.setStyle("");
+															setDragable(modul);
+															modul.setStyle("-fx-border-color: Black;");
+														} else {
+															modul.setOnDragDetected(null);
+															modul.setStyle("-fx-background-color: #80ba24");
+														}
+														
+														UniP.datenmanager.changeModul(new Modul(modulid, kuerzel, name, prüfungsform, prüfungsvoraussetzung, note, crp, semester));
+														dialog.close();
+													}
+												}
+											});
+									        
+									        Scene dialogScene = new Scene(content);
+									        dialog.setScene(dialogScene);
+									        dialog.show();
+										} catch(Exception e) {
+											e.printStackTrace();
+										}
+										
+									}
+								});
+								
+								
+								UniP.datenmanager.addModul(new Modul(modulid, kuerzel, name, prüfungsform, prüfungsvoraussetzung, note, crp, semester));
+								((VBox) ((BorderPane) ((Button) event.getSource()).getParent()).getCenter()).getChildren().add(modul);							
+								dialog.close();
+							}
 						}
 					});
 			        
