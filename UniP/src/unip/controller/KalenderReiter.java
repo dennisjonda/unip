@@ -262,7 +262,7 @@ public class KalenderReiter extends Reiter{
 							if(date.get(Calendar.DAY_OF_YEAR)==termine.get(i).datum.get(Calendar.DAY_OF_YEAR) && date.get(Calendar.YEAR)==termine.get(i).datum.get(Calendar.YEAR)) {
 								if((y-1) == termine.get(i).von) {
 									termin.setId(termine.get(i).getID() + "");
-									termin.setStyle("-fx-background-color: #80ba24; -fx-border-color: #4a5c66");
+									termin.setStyle(getCategoryColor(termine.get(i).kategorie) + " -fx-border-color: #4a5c66");
 									Text terminname = new Text(termine.get(i).titel);
 									terminname.setFill(Color.WHITE);
 									termin.getChildren().add(terminname);
@@ -330,7 +330,7 @@ public class KalenderReiter extends Reiter{
 									if(nmb == termine.get(i).datum.get(Calendar.DAY_OF_MONTH)) {
 										StackPane termin = new StackPane();
 										termin.setId(termine.get(i).getID() + "");
-										termin.setStyle("-fx-background-color: #80ba24; -fx-border-color: #4a5c66");
+										termin.setStyle(getCategoryColor(termine.get(i).kategorie) + " -fx-border-color: #4a5c66");
 										Text terminname = new Text(termine.get(i).titel);
 										terminname.setFill(Color.WHITE);
 										termin.getChildren().add(terminname);
@@ -413,7 +413,7 @@ public class KalenderReiter extends Reiter{
 		
 		for(int i=0;i<termine.size();i++) {
 			BorderPane alarm = new BorderPane();
-			alarm.setStyle("-fx-background-color: #80ba24; -fx-border-color: #4a5c66");
+			alarm.setStyle(getCategoryColor(termine.get(i).kategorie) + "-fx-border-color: #4a5c66");
 			
 			Text abstand = new Text("noch " + zeit.get(i) + " Tage");
 			Text titel = new Text(termine.get(i).titel);
@@ -428,6 +428,21 @@ public class KalenderReiter extends Reiter{
 			BorderPane.setMargin(datum, new Insets(5, 10, 5, 10));
 			
 			alarmBox.getChildren().add(alarm);			
+		}
+	}
+	
+	private String getCategoryColor(Eventtype type) {
+		switch(type) {
+		case KLAUSUR:
+			return "-fx-background-color: #215FBF;"; 
+		case TESTAT:
+			return "-fx-background-color: #D61C89;";
+		case UNI:
+			return "-fx-background-color: #E3A730;";
+		case FREIZEIT:
+			return "-fx-background-color: #36B02E;";
+		default:
+			return "";
 		}
 	}
 	
