@@ -34,7 +34,17 @@ public class NotenReiter extends Reiter {
 			for(int i=0;i<children.size();i++) {
 				if(children.get(i) instanceof TextField) {
 					try{
-						module.get(modul).note = Double.parseDouble(((TextField) children.get(i)).getText());
+						 double note = Double.parseDouble(((TextField) children.get(i)).getText());
+						 
+						 if(note>=1d && note<=4d) {
+							 note*=10d;
+							 note=Math.round(note);
+							 note/=10d;
+						 } else {
+							 note=0d;
+						 }
+						 
+						 module.get(modul).note = note;
 					} catch(NumberFormatException e) {
 						module.get(modul).note = 0d;
 					}
@@ -91,26 +101,7 @@ public class NotenReiter extends Reiter {
 			    {
 			        if (!newPropertyValue)
 			        {
-			        	ObservableList<Node> children = grid.getChildren();
-			        	
-			        	Text gesNote = new Text();
-			        	double noteSum = 0;
-			        	int count = 0;
-			        	
-			            for(int i=0;i<children.size();i++) {
-			            	if(children.get(i) instanceof TextField) {
-			            		try {
-			            			noteSum += Double.parseDouble(((TextField) children.get(i)).getText());
-			            			count++;
-			            		} catch (NumberFormatException e) {
-			            			System.out.println("Wrong grade");
-			            		}
-			            	}
-			            	if(children.get(i) instanceof Text && GridPane.getColumnIndex(children.get(i))==1 && GridPane.getRowIndex(children.get(i))==grid.getRowCount()-1) {
-			            		gesNote = (Text) children.get(i);
-			            	}
-			            }
-			            gesNote.setText((noteSum/count) + "");
+			        	update();
 			        }
 			    }
 			});
@@ -122,7 +113,7 @@ public class NotenReiter extends Reiter {
 			grid.getRowConstraints().add(new RowConstraints(30));
 		}
 		
-		double sumnote = 0;
+		double sumnote = 0d;
 		int gesCrp = 0;
 		int count = 0;
 		
@@ -134,7 +125,15 @@ public class NotenReiter extends Reiter {
 			}
 		}
 		
-		double avgNote = sumnote/ (double) count;
+		
+		double avgNote = 0d;
+		if(count!=0) {
+			avgNote = sumnote / (double) count;
+			
+			avgNote*=10d;
+			avgNote=Math.round(avgNote);
+			avgNote/=10d;
+		}
 		
 		Text gesTxt = new Text("Gesamt");
 		Text gesNoteTxt = new Text(avgNote + "");
