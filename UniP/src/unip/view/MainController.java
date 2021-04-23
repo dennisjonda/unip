@@ -118,23 +118,6 @@ public class MainController extends Application {
 			e.printStackTrace();
 		}
 	}
-	private void loadSplashScreen() 
-	{
-		try {
-		StackPane pane = FXMLLoader.load(getClass().getResource(("SplashGUI.FXML")));
-		root.getChildren().setAll(pane);
-		
-		FadeTransition fadeIn = new FadeTransition(Duration.seconds(3), pane);
-		fadeIn.setFromValue(0);
-		fadeIn.setToValue(1);
-		fadeIn.setCycleCount(1);
-		
-		fadeIn.play();
-		
-		} catch (IOException ex) {
-			Logger.getLogger(SplashGUIController.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
 }
 
 
