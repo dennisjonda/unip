@@ -53,6 +53,18 @@ public class ModulReiter extends Reiter {
 				for(int m=0;m<module.size();m++) {
 					Modul modul = UniP.datenmanager.getModul(Integer.parseInt(((StackPane) module.get(m)).getId()));
 					modul.semester = Integer.parseInt(sem.get(s).getId());
+					
+					if(semester.getParent().getParent()==null) {
+						StackPane modulbox = (StackPane) module.get(m);
+						if(modul.note==0d) {
+							modulbox.setStyle("");
+							setDragable(modulbox);
+							modulbox.setStyle("-fx-border-color: Black;");
+						} else {
+							modulbox.setOnDragDetected(null);
+							modulbox.setStyle("-fx-background-color: #80ba24");
+						}
+					}
 				}
 			}
 		}
