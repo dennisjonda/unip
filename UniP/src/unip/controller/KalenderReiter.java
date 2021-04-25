@@ -225,6 +225,7 @@ public class KalenderReiter extends Reiter{
 		
 		if(woche) { //Wochenansicht
 			ArrayList<Termin> termine = UniP.datenmanager.getWoche(startDate);
+			kalender.getRowConstraints().add(new RowConstraints(50));
 			for(int x=0; x<8;x++) {
 				for(int y=0;y<25;y++) {
 					if(y==0) { //erste Zeile
@@ -251,6 +252,7 @@ public class KalenderReiter extends Reiter{
 							Text text = new Text((y-1) + ":00");
 							kalender.add(text, x, y);
 						}
+						kalender.getRowConstraints().add(new RowConstraints(50));
 					} else { //Wochenzellen
 						StackPane termin = new StackPane();
 						kalender.add(termin, x, y);
@@ -274,6 +276,7 @@ public class KalenderReiter extends Reiter{
 									int length = termine.get(i).bis + 1 - termine.get(i).von;
 									
 									GridPane.setRowSpan(termin, length);
+									y+=length-1;
 								}
 							}
 						}
@@ -361,7 +364,7 @@ public class KalenderReiter extends Reiter{
 		ObservableList<Node> children = kalender.getChildren();
 		for(int i=0; i<children.size();i++) {
 			if(!(children.get(i) instanceof Group)) {
-				GridPane.setMargin(children.get(i), new Insets(10, 10, 10, 10));
+				//GridPane.setMargin(children.get(i), new Insets(10, 10, 10, 10));
 				GridPane.setHalignment(children.get(i), HPos.CENTER);
 			}
 		}
@@ -422,6 +425,10 @@ public class KalenderReiter extends Reiter{
 			Text abstand = new Text("noch " + zeit.get(i) + " Tage");
 			Text titel = new Text(termine.get(i).titel);
 			Text datum = new Text(termine.get(i).datum.get(Calendar.DAY_OF_MONTH) + "." + (termine.get(i).datum.get(Calendar.MONTH)+1) + "." + termine.get(i).datum.get(Calendar.YEAR));
+			abstand.setFill(Color.WHITE);
+			titel.setFill(Color.WHITE);
+			datum.setFill(Color.WHITE);
+			
 			
 			alarm.setTop(abstand);
 			alarm.setCenter(titel);
